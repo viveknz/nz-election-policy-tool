@@ -1,0 +1,17 @@
+# Secrets
+.env
+*.env
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local tooling, not part of the project itself
+sync.sh
