@@ -4,14 +4,29 @@ This is the document that goes into the submission's project description, and it
 what the demo video script gets written from. Get this right before writing code —
 everything else follows from it.
 
+> **Flagged during Phase 1, not yet fully reconciled below:** this document was
+> written before any real party page was fetched. Two things it assumed have since
+> been checked and found wrong — see `04_source_profiles.md` and
+> `05_voter_topics.md` for the full findings:
+> 1. **Party count is seven, not six** — Te Pāti Māori was missing entirely.
+> 2. **The "childcare" example throughout this document is unverified and likely
+>    wrong.** Labour's page has no childcare-framed policy at all (checked
+>    directly), and current NZ voter polling doesn't show childcare as a live
+>    top-of-mind issue — "parental leave" and "cost of living" are the better-
+>    evidenced real examples. The specific claim below that "National's related
+>    material sits under Paid Parental Leave" has not yet been checked against
+>    National's actual page. The narrative below is left as-is rather than
+>    silently rewritten — treat every "childcare" mention past this point as an
+>    illustrative placeholder needing a real replacement, not a confirmed fact.
+
 ---
 
 ## The problem
 
-New Zealand's 2026 general election is 7 November. Six parties have published policy
-positions — some costed and dated, some not. Treasury has published its own fiscal
-forecast. RBNZ has published its current rate and reasoning for it. Nobody has put
-these next to each other.
+New Zealand's 2026 general election is 7 November. Seven parties have published
+policy positions — some costed and dated, some not. Treasury has published its own
+fiscal forecast. RBNZ has published its current rate and reasoning for it. Nobody has
+put these next to each other.
 
 A voter who wants to check a party's promise against reality has to read the party's
 own page, then separately find and read a 100-page Treasury document, then work out
@@ -95,7 +110,7 @@ Same discipline as a previous project of ours that placed 2nd in the Databricks 
 App Challenge: profile every source before writing extraction code, document every
 trap found, and never let a metric ship without checking what it actually counts.
 
-1. **Ingest** six parties' policy pages, Treasury's BEFU 2026, RBNZ's OCR history, and
+1. **Ingest** seven parties' policy pages, Treasury's BEFU 2026, RBNZ's OCR history, and
    Roy Morgan's monthly polling — each already profiled for shape and quirks (see
    `02_data_sources.md`).
 2. **Extract** per-party, per-topic positions with source links. Each extracted item

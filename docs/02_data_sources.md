@@ -18,6 +18,7 @@ answer with a confident tone.
 | TOP | opportunity.org.nz/policy | 5 priority + 7 secondary pages | Thematic, not itemised |
 | NZ First | nzfirst.nz/policy | 15+ individual announcement pages | Weakest on stated mechanism/cost — mostly headline commitments |
 | ACT | act.org.nz/policies | 8 category pages (Economy & Cost of Living, Law & Order, Health, Equal Rights & Democracy, Housing & Infrastructure, Backing Rural NZ, Education, Hunting/Conservation/Firearms) | Correction from initial search: an indexed policy page exists at `/policies` (not `/policy`, which doesn't exist). Same shape as National/TOP — categorised index. The `/news` feed found earlier is separate and not needed as a policy source. |
+| Te Pāti Māori | maoriparty.org.nz/policy | 17 individual policy pages, each with a "What we'll do" bullet list + "Why it matters" narrative — most consistent template of any party checked | Added to scope after being missed entirely in initial research, despite holding sitting seats — same "looks selective" problem as the initial ACT omission. Both `/policy` and `/policies` return the same list; use `/policy` (indexed/canonical). Homepage only teases 10 of 17 — must crawl from `/policy`, not the homepage. NationBuilder platform mangles macrons in URL slugs (e.g. `/kai_sovereignt`, `/mokopuna_m_ori`) — follow actual hrefs, don't reconstruct slugs. Has a policy literally named "Cost of living." |
 
 ## Sector source
 
@@ -131,8 +132,11 @@ source: Electoral Commission") with no inferred effect attached.
 
 ## Source-shape note (revised)
 
-All six parties (National, Labour, Greens, TOP, NZ First, ACT) now confirmed to expose
-policy through some form of categorised index or listing page. NZ First's is a flat
+All seven parties (National, Labour, Greens, TOP, NZ First, ACT, Te Pāti Māori) now
+confirmed to expose policy through some form of categorised index or listing page.
+Te Pāti Māori was added after this note was first written, having been missed
+entirely from the original six despite holding sitting seats — see the party table
+above and `04_source_profiles.md` for the full finding. NZ First's is a flat
 chronological list rather than a topic index, and is thinner on stated mechanism/cost
 than the others, but it is still clearly policy-framed content rather than mixed
 commentary. No source currently requires the commentary-vs-policy classification step

@@ -48,14 +48,21 @@ question bank tested the season convention and the cause caveat.
 
 ## Coverage
 
-Five parties confirmed with live sources: National, Labour, Greens, TOP, NZ First.
+Seven parties confirmed with live sources: National, Labour, Greens, TOP, NZ First,
+ACT, Te Pāti Māori.
 
-**ACT is missing and that's a problem.** They're part of the governing coalition and
-excluding them makes the comparison look selective before a single line of code is
-written. Find their policy page in Phase 0 before building anything else.
+**ACT was initially missing and has since been resolved.** Found at
+`act.org.nz/policies` after an early wrong-URL guess (`/policy`, singular, doesn't
+exist) — see `02_data_sources.md` for the correction.
 
-Retail NZ's manifesto is a sixth source of a different kind — a sector's asks,
-independent of any party — useful for a "does any party answer this" cross-check.
+**Te Pāti Māori was also initially missing and has since been added.** They hold
+sitting seats in Parliament — excluding them had the same "looks selective" problem
+originally flagged for ACT, caught during Phase 1 source profiling rather than
+before any code was written. Found at `maoriparty.org.nz/policy` — see
+`04_source_profiles.md` for the full profile.
+
+Retail NZ's manifesto is a source of a different kind — a sector's asks, independent
+of any party — useful for a "does any party answer this" cross-check.
 
 ## What "done" looks like for the hackathon
 
