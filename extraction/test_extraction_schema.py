@@ -186,6 +186,7 @@ def run_one_case(client: OpenAI, case: dict) -> bool:
                 },
             },
             max_tokens=800,
+            temperature=0,
         )
     except BadRequestError as e:
         logger.error("Nebius rejected the request: %s", e)
@@ -238,22 +239,25 @@ def run_one_case(client: OpenAI, case: dict) -> bool:
     return all_passed
 
 
+REPEAT_COUNT = 3
+
+
 def run_test(api_key: str) -> None:
     client = OpenAI(base_url=BASE_URL, api_key=api_key)
 
     results = {}
     for case in TEST_CASES:
-        results[case["name"]] = run_one_case(client, case)
-        print()  # spacer between cases
+        pass_count = 0
+        for attempt in range(1, REPEAT_COUNT + 1):
+            logger.info("Attempt %d of %d", attempt, REPEAT_COUNT)
+            if run_one_case(client, case):
+                pass_count += 1
+            print()  # spacer between attempts
+        results[case["name"]] = f"{pass_count}/{REPEAT_COUNT}"
 
-    logger.info("=== Summary ===")
-    for name, passed in results.items():
-        logger.info("  [%s] %s", "PASS" if passed else "FAIL", name)
-
-    if all(results.values()):
-        logger.info("All test cases passed.")
-    else:
-        logger.warning("One or more test cases failed -- review above.")
+    logger.info("=== Summary (temperature=0, %d attempts per case) ===", REPEAT_COUNT)
+    for name, score in results.items():
+        logger.info("  %s: %s", score, name)
 
 
 if __name__ == "__main__":
