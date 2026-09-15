@@ -84,7 +84,6 @@ SCHEMA = {
             "type": "string",
             "description": "The stated start date or trigger condition, exactly as given in the text (e.g. 'from July 2026'). Use an empty string only if no date or trigger is stated anywhere in the text.",
         },
-        "source_url": {"type": "string"},
     },
     "required": [
         "policy_name",
@@ -93,7 +92,6 @@ SCHEMA = {
         "is_costed",
         "amount",
         "start_date",
-        "source_url",
     ],
     "additionalProperties": False,
 }
@@ -114,8 +112,7 @@ def run_test(api_key: str) -> None:
     client = OpenAI(base_url=BASE_URL, api_key=api_key)
 
     prompt = (
-        "Extract the policy details from this real party policy page text. "
-        "The source URL is: " + SOURCE_URL + "\n\n"
+        "Extract the policy details from this real party policy page text.\n\n"
         "Policy text:\n" + REAL_POLICY_TEXT
     )
 
@@ -154,7 +151,15 @@ def run_test(api_key: str) -> None:
         print(content)
         return
 
-    logger.info("Parsed extraction result:")
+    logger.info("Parsed extraction result (before attaching known metadata):")
+    print(json.dumps(parsed, indent=2))
+
+    # source_url is known -- we fetched this page ourselves -- so it's attached
+    # here rather than asked of the model, removing that whole field from the
+    # degenerate-repetition risk seen earlier.
+    parsed["source_url"] = SOURCE_URL
+
+    logger.info("Final result with source_url attached:")
     print(json.dumps(parsed, indent=2))
 
     # Sanity checks against what we know is actually true from the real page.
@@ -164,7 +169,6 @@ def run_test(api_key: str) -> None:
         "start_date mentions July 2026 or 2027": any(
             token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
         ),
-        "source_url matches": parsed.get("source_url") == SOURCE_URL,
     }
 
     logger.info("Sanity checks against known-correct facts from the real page:")
