@@ -61,7 +61,6 @@ sitting their State Final examination from July 2026 onwards.
 """,
         "checks": lambda parsed: {
             "amount is exactly '$525 million'": parsed.get("amount") == "$525 million",
-            "is_costed is True": parsed.get("is_costed") is True,
             "start_date mentions 2026 or 2027": any(
                 token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
             ),
@@ -100,7 +99,6 @@ The policy will:
         # fund's start).
         "checks": lambda parsed: {
             "amount is exactly '$220 million'": parsed.get("amount") == "$220 million",
-            "is_costed is True": parsed.get("is_costed") is True,
             "start_date does not falsely claim a single clean start date": (
                 "2040" not in (parsed.get("start_date") or "")
                 or "target" in (parsed.get("start_date") or "").lower()
@@ -126,10 +124,6 @@ SCHEMA = {
             "maxLength": 200,
             "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms. Do not include costing, dates, or eligibility detail here -- those go in their own fields.",
         },
-        "is_costed": {
-            "type": "boolean",
-            "description": "True if any dollar figure appears anywhere in the text describing this policy, even if it is not explicitly labelled 'cost' -- for example 'establish a $220 million fund' counts as costed, the same as 'costed at $220 million'.",
-        },
         "amount": {
             "type": "string",
             "maxLength": 40,
@@ -146,7 +140,6 @@ SCHEMA = {
         "policy_name",
         "party",
         "stated_position",
-        "is_costed",
         "amount",
         "start_date",
     ],
@@ -207,9 +200,14 @@ def run_one_case(client: OpenAI, case: dict) -> bool:
         print(content)
         return False
 
-    # source_url is known -- we fetched this page ourselves -- so it's attached
-    # here rather than asked of the model.
+    # source_url is known -- we fetched this page ourselves. is_costed is
+    # derived from amount rather than asked of the model separately, after
+    # finding the model can extract amount correctly while independently (and
+    # wrongly) judging is_costed=false in the same response -- an internal
+    # contradiction that showed the two must not be asked as separate
+    # judgments.
     parsed["source_url"] = case["source_url"]
+    parsed["is_costed"] = bool(parsed.get("amount"))
 
     logger.info("Extraction result:")
     print(json.dumps(parsed, indent=2))
