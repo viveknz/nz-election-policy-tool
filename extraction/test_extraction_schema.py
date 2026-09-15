@@ -185,7 +185,7 @@ def run_one_case(client: OpenAI, case: dict) -> bool:
                     "strict": True,
                 },
             },
-            max_tokens=800,
+            max_tokens=2000,
             temperature=0,
         )
     except BadRequestError as e:
