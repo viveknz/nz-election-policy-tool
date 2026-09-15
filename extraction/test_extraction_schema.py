@@ -76,7 +76,9 @@ SCHEMA = {
         "is_costed": {"type": "boolean"},
         "amount": {
             "type": "string",
-            "description": "The stated dollar figure, exactly as given in the text (e.g. '$525 million'). Use an empty string only if no dollar figure is stated anywhere in the text.",
+            "maxLength": 40,
+            "pattern": "^(\\$[0-9][0-9,\\.]*\\s?(million|billion|m|bn)?)?$",
+            "description": "The stated dollar figure, exactly as given in the text (e.g. '$525 million'). Use an empty string only if no dollar figure is stated anywhere in the text. Do not add explanation -- the figure only.",
         },
         "start_date": {
             "type": "string",
@@ -157,7 +159,7 @@ def run_test(api_key: str) -> None:
 
     # Sanity checks against what we know is actually true from the real page.
     checks = {
-        "amount mentions $525 million": "525" in (parsed.get("amount") or ""),
+        "amount is exactly '$525 million' (no garbage/repetition)": parsed.get("amount") == "$525 million",
         "is_costed is True": parsed.get("is_costed") is True,
         "start_date mentions July 2026 or 2027": any(
             token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
