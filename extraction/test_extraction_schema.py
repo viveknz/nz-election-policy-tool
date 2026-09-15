@@ -75,12 +75,12 @@ SCHEMA = {
         },
         "is_costed": {"type": "boolean"},
         "amount": {
-            "type": ["string", "null"],
-            "description": "The stated dollar figure, exactly as given, or null if not costed.",
+            "type": "string",
+            "description": "The stated dollar figure, exactly as given in the text (e.g. '$525 million'). Use an empty string only if no dollar figure is stated anywhere in the text.",
         },
         "start_date": {
-            "type": ["string", "null"],
-            "description": "The stated start date or trigger condition, exactly as given, or null if not stated.",
+            "type": "string",
+            "description": "The stated start date or trigger condition, exactly as given in the text (e.g. 'from July 2026'). Use an empty string only if no date or trigger is stated anywhere in the text.",
         },
         "source_url": {"type": "string"},
     },
