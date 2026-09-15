@@ -36,7 +36,8 @@ form a view from a headline or a 30-second clip.
 New Zealand also runs MMP, where a single party almost never wins outright and the
 government is decided by which parties can combine to 61 of 120 seats. Polling moves
 month to month, and small shifts change which coalitions are even mathematically
-possible. Right now TOP is polling at 9.5% and positioned to hold the balance of power
+possible. Right now Opportunity (formerly branded as TOP, confirmed rebranded per
+`04_source_profiles.md`) is polling at 9.5% and positioned to hold the balance of power
 — a fact that changes the practical meaning of every other party's policy, since none
 of them govern alone.
 

@@ -15,9 +15,9 @@ answer with a confident tone.
 | National | national.org.nz/policies | ~12 individual pages, categorised (Economy, Tax, Law & Order, Education, Health) | No visible costings on the listing page; check individual pages |
 | Labour | labour.org.nz/our-policies | 16 individual pages | Explicit costings and start dates stated inline (e.g. Graduate Nurse Guarantee "$525 million") — best-structured source |
 | Greens | greens.org.nz/manifesto_2026 | 34-topic manifesto + full PDF + Māori Manifesto PDF | Long-form prose per topic, not itemised costings |
-| TOP | opportunity.org.nz/policy | 5 priority + 7 secondary pages | Thematic, not itemised |
+| Opportunity | opportunity.org.nz/policy | 5 priority + 9 secondary pages (grouped under Unity, Innovation, Nature) | No descriptive text on the listing page at all — every policy needs an individual fetch. Formerly branded "TOP"; site now uses "Opportunity" exclusively, confirmed against three independent sources. |
 | NZ First | nzfirst.nz/policy | 15+ individual announcement pages | Weakest on stated mechanism/cost — mostly headline commitments |
-| ACT | act.org.nz/policies | 8 category pages (Economy & Cost of Living, Law & Order, Health, Equal Rights & Democracy, Housing & Infrastructure, Backing Rural NZ, Education, Hunting/Conservation/Firearms) | Correction from initial search: an indexed policy page exists at `/policies` (not `/policy`, which doesn't exist). Same shape as National/TOP — categorised index. The `/news` feed found earlier is separate and not needed as a policy source. |
+| ACT | act.org.nz/policies | 8 category pages (Economy & Cost of Living, Law & Order, Health, Equal Rights & Democracy, Housing & Infrastructure, Backing Rural NZ, Education, Hunting/Conservation/Firearms) | Correction from initial search: an indexed policy page exists at `/policies` (not `/policy`, which doesn't exist). Same shape as National/Opportunity — categorised index. The `/news` feed found earlier is separate and not needed as a policy source. |
 | Te Pāti Māori | maoriparty.org.nz/policy | 17 individual policy pages, each with a "What we'll do" bullet list + "Why it matters" narrative — most consistent template of any party checked | Added to scope after being missed entirely in initial research, despite holding sitting seats — same "looks selective" problem as the initial ACT omission. Both `/policy` and `/policies` return the same list; use `/policy` (indexed/canonical). Homepage only teases 10 of 17 — must crawl from `/policy`, not the homepage. NationBuilder platform mangles macrons in URL slugs (e.g. `/kai_sovereignt`, `/mokopuna_m_ori`) — follow actual hrefs, don't reconstruct slugs. Has a policy literally named "Cost of living." |
 
 ## Sector source
@@ -30,7 +30,7 @@ answer with a confident tone.
 
 | Source | URL | Shape |
 |---|---|---|
-| Roy Morgan | roymorgan.com/findings (monthly) | Press-release HTML + downloadable PDF. August 2026 finding: National-led 49%, Labour-led 41%, TOP 9.5% and holding balance of power. Methodology and margin-of-error table included every release. History runs back through at least May 2026 at predictable URLs (finding numbers increment). |
+| Roy Morgan | roymorgan.com/findings (monthly) | Press-release HTML + downloadable PDF. August 2026 finding: National-led 49%, Labour-led 41%, Opportunity 9.5% and holding balance of power. Methodology and margin-of-error table included every release. History runs back through at least May 2026 at predictable URLs (finding numbers increment, but not by a fixed step — see `06_additional_sources.md`). |
 
 ## Economic baseline — the anchor for every check
 
@@ -55,7 +55,7 @@ discover it after ingestion.
 |---|---|---|
 | Individual policy pages (National, Labour, NZ First) | Fetch each URL, extract main content | Low — static HTML, one page per policy |
 | Manifesto listing (Greens) | Fetch listing page for links, then each linked page, or the single PDF | PDF is more stable for one-shot ingestion; per-page is more current if updated mid-campaign |
-| TOP | Same as National/Labour | Low |
+| Opportunity | Same as National/Labour | Low, but no descriptive text on listing — every policy needs an individual fetch |
 | Retail NZ | Direct PDF download | Low — static document |
 | Roy Morgan | Fetch the monthly finding page; PDF also available | Medium — URL pattern must be confirmed to hold for earlier/later months |
 | Treasury BEFU | Fetch publication page, likely links to PDF chapters | Low, but large document — extract only the fiscal summary numbers needed |
@@ -119,7 +119,7 @@ source: Electoral Commission") with no inferred effect attached.
 
 - [x] ACT's policy page URL — found at act.org.nz/policies (note: plural, `/policy`
       singular does not exist). Eight category pages, same indexed shape as
-      National/TOP. The earlier `/news`-feed finding was superseded once the correct
+      National/Opportunity. The earlier `/news`-feed finding was superseded once the correct
       URL was found — worth remembering that a missing page can look like "no source
       exists" when it is actually "wrong URL guessed."
 - [ ] Whether Treasury or RBNZ expose the underlying figures in a table/API rather than
@@ -132,7 +132,7 @@ source: Electoral Commission") with no inferred effect attached.
 
 ## Source-shape note (revised)
 
-All seven parties (National, Labour, Greens, TOP, NZ First, ACT, Te Pāti Māori) now
+All seven parties (National, Labour, Greens, Opportunity, NZ First, ACT, Te Pāti Māori) now
 confirmed to expose policy through some form of categorised index or listing page.
 Te Pāti Māori was added after this note was first written, having been missed
 entirely from the original six despite holding sitting seats — see the party table

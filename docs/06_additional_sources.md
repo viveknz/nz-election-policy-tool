@@ -75,7 +75,7 @@ on testing two different pages under the same domain.
 - Explicit statement on the page: "Minor parties are limited to those with a decent
   prospect of entering Parliament through party vote or a specific electorate" —
   RNZ's own inclusion threshold, worth noting since it's a different (looser) bar
-  than "sitting in Parliament," and would include TOP/Opportunity by their own
+  than "sitting in Parliament," and would include Opportunity (formerly TOP) by their own
   stated logic.
 
 ### What this means for the build
@@ -97,7 +97,7 @@ Found while checking the above, not requested, not yet added to scope:
 - **NZ Herald's own policy grid** — explicitly scopes itself to "all parties
   currently represented in Parliament plus the Opportunity Party." This is an
   independent confirmation that a credible outlet draws its own party-scope line
-  in the same place we just decided to draw ours (sitting parties + TOP), which
+  in the same place we just decided to draw ours (sitting parties + Opportunity), which
   supports the Te Pāti Māori addition.
 - **PartyMap.co.nz** — claims to cover all 17 registered parties, organised by
   topic categories (Economy and tax, Health, Education, Housing and transport,

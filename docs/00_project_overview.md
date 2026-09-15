@@ -6,7 +6,7 @@
 ## The question
 
 New Zealand's 2026 general election is 7 November. Five parties (National, Labour,
-Greens, TOP, NZ First) have published policy positions, some with explicit costings.
+Greens, Opportunity, NZ First) have published policy positions, some with explicit costings.
 Treasury has published its own fiscal forecast (BEFU 2026). RBNZ has published its
 current rate and reasoning. Nobody has put these next to each other.
 
@@ -48,7 +48,7 @@ question bank tested the season convention and the cause caveat.
 
 ## Coverage
 
-Seven parties confirmed with live sources: National, Labour, Greens, TOP, NZ First,
+Seven parties confirmed with live sources: National, Labour, Greens, Opportunity, NZ First,
 ACT, Te Pāti Māori.
 
 **ACT was initially missing and has since been resolved.** Found at
