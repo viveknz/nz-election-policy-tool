@@ -26,3 +26,16 @@ Not a wishlist; only things with a concrete reason they're waiting.
   `json.loads()` fails, rather than treating one failed call as a permanent
   extraction failure for that policy. **Not yet done** — needed before the
   pipeline runs unattended across all parties' full policy sets.
+
+- **Full agentic system with observability** (raised 15 Sep 2026,
+  `09_architecture.md`). Current architecture decision uses a deterministic
+  router for the Orchestrator rather than an LLM-based one, deliberately kept
+  simple to start (see `09_architecture.md` for the reasoning). Vivek wants to
+  come back to a fuller agentic setup later — proper multi-agent orchestration
+  with tracing/observability (e.g. logging each sub-agent call, its inputs,
+  outputs, latency, and failures in a queryable way) rather than the current
+  plain Python logging. **Not yet scoped in detail.** Deferred until the
+  simpler deterministic version is working end-to-end and there's a concrete
+  reason (real routing failures, or a need to debug production behaviour) to
+  justify the added complexity — matches the project's stated principle of not
+  over-engineering ahead of actual need.
