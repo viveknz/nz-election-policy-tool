@@ -126,12 +126,15 @@ SCHEMA = {
             "maxLength": 200,
             "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms. Do not include costing, dates, or eligibility detail here -- those go in their own fields.",
         },
-        "is_costed": {"type": "boolean"},
+        "is_costed": {
+            "type": "boolean",
+            "description": "True if any dollar figure appears anywhere in the text describing this policy, even if it is not explicitly labelled 'cost' -- for example 'establish a $220 million fund' counts as costed, the same as 'costed at $220 million'.",
+        },
         "amount": {
             "type": "string",
             "maxLength": 40,
             "pattern": "^(\\$[0-9][0-9,\\.]*\\s?(million|billion|m|bn)?)?$",
-            "description": "The stated dollar figure, exactly as given in the text (e.g. '$525 million'). Use an empty string only if no dollar figure is stated anywhere in the text. Do not add explanation -- the figure only.",
+            "description": "The stated dollar figure, exactly as given in the text, wherever it appears -- including inside an action description like 'establish a $220 million fund' (extract '$220 million'), not only an explicit 'cost:' statement. Use an empty string only if no dollar figure appears anywhere in the text at all.",
         },
         "start_date": {
             "type": "string",
