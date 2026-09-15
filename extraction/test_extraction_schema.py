@@ -27,13 +27,11 @@ logger = logging.getLogger("extraction_schema_test")
 BASE_URL = "https://api.tokenfactory.nebius.com/v1/"
 MODEL = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
 
-# Real text fetched directly from labour.org.nz/election-policy-pages/
-# graduate-nurse-job-guarantee/ on 13 Sep 2026. Trimmed to the sections relevant
-# to extraction (key facts, eligibility/cost) -- the full page also has a
-# district-by-district nursing data table and an FAQ section repeating the same
-# facts, both left out here since this test is about the core schema, not
-# every section type on the page.
-REAL_POLICY_TEXT = """
+TEST_CASES = [
+    {
+        "name": "Labour - Graduate Nurse Job Guarantee",
+        "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
+        "text": """
 Graduate Nurse Job Guarantee
 
 Labour will offer every eligible New Zealand-trained graduate nurse a job in our
@@ -60,9 +58,57 @@ have completed their nursing qualification at a New Zealand tertiary
 institution. The cost of the Graduate Nurse Job Guarantee is $525 million. It
 will be funded from health cost-pressure funding. It will apply to graduates
 sitting their State Final examination from July 2026 onwards.
-"""
+""",
+        "checks": lambda parsed: {
+            "amount is exactly '$525 million'": parsed.get("amount") == "$525 million",
+            "is_costed is True": parsed.get("is_costed") is True,
+            "start_date mentions 2026 or 2027": any(
+                token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
+            ),
+        },
+    },
+    {
+        "name": "Te Pati Maori - Te Tiriti Entrenchment Policy",
+        "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
+        "text": """
+TE PATI MAORI LAUNCHES TE TIRITI ENTRENCHMENT POLICY
 
-SOURCE_URL = "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/"
+Te Pati Maori has today launched its Te Tiriti Entrenchment Policy, a major
+constitutional reform package that will make Crown obligations arising from Te
+Tiriti legally enforceable and resource the next stage of Maori-led
+constitutional transformation.
+
+The policy will:
+- establish a $220 million Matike Mai Fund over four years to independently
+  resource Maori-led constitutional transformation;
+- establish an independent Te Tiriti Commission with powers to investigate
+  serious Crown breaches, require remedial action and issue Te Tiriti
+  Compliance Orders;
+- make Waitangi Tribunal recommendations binding on the Crown;
+- restore and resource a national action plan to implement the United Nations
+  Declaration on the Rights of Indigenous Peoples within the first 100 days;
+  and
+- set 2040 as the target for constitutional transformation in Aotearoa.
+""",
+        # This is a harder case than Labour's clean "from July 2026" -- there's
+        # no single clean start date, just a duration ("over four years") and a
+        # separate target year (2040) for a different aspect of the policy than
+        # the fund itself. This tests whether the model can correctly decline
+        # to invent a clean date where the source text doesn't give one, rather
+        # than forcing "2040" into start_date when it actually describes a
+        # different thing (the constitutional transformation target, not the
+        # fund's start).
+        "checks": lambda parsed: {
+            "amount is exactly '$220 million'": parsed.get("amount") == "$220 million",
+            "is_costed is True": parsed.get("is_costed") is True,
+            "start_date does not falsely claim a single clean start date": (
+                "2040" not in (parsed.get("start_date") or "")
+                or "target" in (parsed.get("start_date") or "").lower()
+                or "constitutional" in (parsed.get("start_date") or "").lower()
+            ),
+        },
+    },
+]
 
 SCHEMA = {
     "type": "object",
@@ -116,15 +162,13 @@ def get_api_key() -> str:
     return key
 
 
-def run_test(api_key: str) -> None:
-    client = OpenAI(base_url=BASE_URL, api_key=api_key)
-
+def run_one_case(client: OpenAI, case: dict) -> bool:
     prompt = (
         "Extract the policy details from this real party policy page text.\n\n"
-        "Policy text:\n" + REAL_POLICY_TEXT
+        "Policy text:\n" + case["text"]
     )
 
-    logger.info("Testing extraction schema against real Labour policy text on %s", MODEL)
+    logger.info("--- Test case: %s ---", case["name"])
 
     try:
         response = client.chat.completions.create(
@@ -142,13 +186,13 @@ def run_test(api_key: str) -> None:
         )
     except BadRequestError as e:
         logger.error("Nebius rejected the request: %s", e)
-        sys.exit(1)
+        return False
     except APIConnectionError as e:
         logger.error("Network-level failure calling Nebius: %s", e)
-        sys.exit(1)
+        return False
     except APIError as e:
         logger.error("Nebius API returned an error: %s", e)
-        sys.exit(1)
+        return False
 
     content = response.choices[0].message.content
 
@@ -157,41 +201,56 @@ def run_test(api_key: str) -> None:
     except (json.JSONDecodeError, TypeError):
         logger.warning("Response content was not valid JSON. Raw content below:")
         print(content)
-        return
-
-    logger.info("Parsed extraction result (before attaching known metadata):")
-    print(json.dumps(parsed, indent=2))
+        return False
 
     # source_url is known -- we fetched this page ourselves -- so it's attached
-    # here rather than asked of the model, removing that whole field from the
-    # degenerate-repetition risk seen earlier.
-    parsed["source_url"] = SOURCE_URL
+    # here rather than asked of the model.
+    parsed["source_url"] = case["source_url"]
 
-    logger.info("Final result with source_url attached:")
+    logger.info("Extraction result:")
     print(json.dumps(parsed, indent=2))
 
-    # Sanity checks against what we know is actually true from the real page.
-    checks = {
-        "amount is exactly '$525 million' (no garbage/repetition)": parsed.get("amount") == "$525 million",
-        "is_costed is True": parsed.get("is_costed") is True,
-        "start_date mentions July 2026 or 2027": any(
-            token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
-        ),
-        "start_date is short (<60 chars, no runaway generation)": len(parsed.get("start_date") or "") <= 60,
-        "start_date has no question marks (a sign of hallucinated commentary)": "?" not in (parsed.get("start_date") or ""),
-        "stated_position is short (<200 chars, no runaway generation)": len(parsed.get("stated_position") or "") <= 200,
-        "policy_name is short (<80 chars, no runaway generation)": len(parsed.get("policy_name") or "") <= 80,
-    }
+    checks = case["checks"](parsed)
+    checks["policy_name is short (<80 chars, no runaway generation)"] = (
+        len(parsed.get("policy_name") or "") <= 80
+    )
+    checks["stated_position is short (<200 chars, no runaway generation)"] = (
+        len(parsed.get("stated_position") or "") <= 200
+    )
+    checks["start_date is short (<60 chars, no runaway generation)"] = (
+        len(parsed.get("start_date") or "") <= 60
+    )
+    checks["start_date has no question marks (sign of hallucinated commentary)"] = (
+        "?" not in (parsed.get("start_date") or "")
+    )
 
-    logger.info("Sanity checks against known-correct facts from the real page:")
+    logger.info("Sanity checks:")
+    all_passed = True
     for check_name, passed in checks.items():
         status = "PASS" if passed else "FAIL"
         logger.info("  [%s] %s", status, check_name)
+        if not passed:
+            all_passed = False
 
-    if all(checks.values()):
-        logger.info("All sanity checks passed.")
+    return all_passed
+
+
+def run_test(api_key: str) -> None:
+    client = OpenAI(base_url=BASE_URL, api_key=api_key)
+
+    results = {}
+    for case in TEST_CASES:
+        results[case["name"]] = run_one_case(client, case)
+        print()  # spacer between cases
+
+    logger.info("=== Summary ===")
+    for name, passed in results.items():
+        logger.info("  [%s] %s", "PASS" if passed else "FAIL", name)
+
+    if all(results.values()):
+        logger.info("All test cases passed.")
     else:
-        logger.warning("One or more sanity checks failed -- review the extraction above.")
+        logger.warning("One or more test cases failed -- review above.")
 
 
 if __name__ == "__main__":
