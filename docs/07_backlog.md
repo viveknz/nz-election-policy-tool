@@ -1,0 +1,28 @@
+# Backlog
+
+Deferred items — things identified as needed but intentionally not actioned yet.
+Not a wishlist; only things with a concrete reason they're waiting.
+
+---
+
+## Open
+
+- **NZ First manual content capture** (raised 13 Sep 2026, `04_source_profiles.md`).
+  `nzfirst.nz` blocks automated access via robots.txt. Decision made: NZ First
+  stays in scope, handled via one-time manual capture (someone visits
+  `nzfirst.nz/policy` and each individual announcement page, copies the actual
+  content) rather than a live crawl, same treatment as RNZ. **Not yet done.**
+  Deferred while extraction schema work proceeds on the six sources that can be
+  fetched directly. Must be completed before NZ First can be included in the
+  working demo — the extraction pipeline will have nothing to run against for
+  this party until this is done.
+
+- **Retry-on-parse-failure logic for the extraction pipeline** (raised 15 Sep
+  2026, `08_extraction_schema.md` Round 4). Even at `max_tokens=2000`,
+  extraction calls occasionally return truncated/invalid JSON (roughly 1 in 6
+  calls observed across testing) — a call-level reliability issue, not a schema
+  or prompt problem. The real extraction pipeline (not yet built — currently
+  only a test script) needs to retry a call a small number of times when
+  `json.loads()` fails, rather than treating one failed call as a permanent
+  extraction failure for that policy. **Not yet done** — needed before the
+  pipeline runs unattended across all parties' full policy sets.
