@@ -67,11 +67,18 @@ SOURCE_URL = "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job
 SCHEMA = {
     "type": "object",
     "properties": {
-        "policy_name": {"type": "string"},
-        "party": {"type": "string"},
+        "policy_name": {
+            "type": "string",
+            "maxLength": 80,
+        },
+        "party": {
+            "type": "string",
+            "maxLength": 40,
+        },
         "stated_position": {
             "type": "string",
-            "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms.",
+            "maxLength": 200,
+            "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms. Do not include costing, dates, or eligibility detail here -- those go in their own fields.",
         },
         "is_costed": {"type": "boolean"},
         "amount": {
@@ -82,7 +89,8 @@ SCHEMA = {
         },
         "start_date": {
             "type": "string",
-            "description": "The stated start date or trigger condition, exactly as given in the text (e.g. 'from July 2026'). Use an empty string only if no date or trigger is stated anywhere in the text.",
+            "maxLength": 60,
+            "description": "The stated start date or trigger condition, exactly as given in the text (e.g. 'from July 2026'). Use an empty string only if no date or trigger is stated anywhere in the text. State the fact only -- no explanation, no assumptions, no commentary.",
         },
     },
     "required": [
@@ -169,6 +177,10 @@ def run_test(api_key: str) -> None:
         "start_date mentions July 2026 or 2027": any(
             token in (parsed.get("start_date") or "") for token in ["2026", "2027"]
         ),
+        "start_date is short (<60 chars, no runaway generation)": len(parsed.get("start_date") or "") <= 60,
+        "start_date has no question marks (a sign of hallucinated commentary)": "?" not in (parsed.get("start_date") or ""),
+        "stated_position is short (<200 chars, no runaway generation)": len(parsed.get("stated_position") or "") <= 200,
+        "policy_name is short (<80 chars, no runaway generation)": len(parsed.get("policy_name") or "") <= 80,
     }
 
     logger.info("Sanity checks against known-correct facts from the real page:")
