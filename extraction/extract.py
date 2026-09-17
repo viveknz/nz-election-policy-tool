@@ -103,6 +103,37 @@ SCHEMA = {
 }
 
 
+def _validate_amount_against_source(value: str, source_text: str, party: str) -> str:
+    """
+    amount's only safeguard until now was the schema's format regex --
+    confirming it LOOKS like a dollar figure, never confirming the actual
+    digits are grounded in the source. That gap let through a fabricated
+    '$9' for Opportunity's Healthy People policy (a real text that states
+    percentages only, no dollar figure at all) -- the model appears to have
+    cross-contaminated the '9' from a correctly-extracted '9% of GDP' into a
+    fabricated dollar amount. Same fix as percentage_target: require the
+    literal '$<number>' pattern in the source text, not just a
+    format-valid-looking string.
+    """
+    if not value:
+        return value
+
+    match = re.match(r"\$([0-9][0-9,\.]*)", value)
+    if not match:
+        return value  # shouldn't happen given the schema's regex, but be safe
+
+    number = match.group(1)
+    if not re.search(r"\$\s?" + re.escape(number), source_text):
+        logger.warning(
+            "Discarding amount for %s -- '$%s' not found as a literal dollar "
+            "figure in the source text (likely fabricated): %r",
+            party, number, value,
+        )
+        return ""
+
+    return value
+
+
 def _validate_percentage_against_source(value: str, source_text: str, party: str) -> str:
     """
     Same fabrication-check principle as _validate_against_source, applied to
@@ -248,8 +279,8 @@ def extract_policy(
         # quantifying it in dollars, and both matter for later fiscal
         # comparison against Treasury/RBNZ baselines (which themselves use
         # both dollar and %GDP figures -- see docs/02_data_sources.md).
-        parsed["amount"] = _validate_against_source(
-            parsed.get("amount", ""), policy_text, "amount", party
+        parsed["amount"] = _validate_amount_against_source(
+            parsed.get("amount", ""), policy_text, party
         )
         parsed["percentage_target"] = _validate_percentage_against_source(
             parsed.get("percentage_target", ""), policy_text, party

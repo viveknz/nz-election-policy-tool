@@ -4,17 +4,17 @@
     "party": "Labour",
     "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
     "amount": "$525 million",
-    "percentage_target": "0.8% FTE (minimum)",
-    "start_date": "2027 (job offers start from 2027, for graduates sitting the ",
+    "percentage_target": "",
+    "start_date": "2027 (job offers start in 2027, applies to graduates sitting",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true
   },
   {
     "policy_name": "Te Tiriti Entrenchment Policy",
     "party": "Te Pati Maori",
-    "stated_position": "Constitutional reform package",
+    "stated_position": "Launched today",
     "amount": "$220 million",
-    "percentage_target": "40%",
+    "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
     "is_costed": true
@@ -22,7 +22,7 @@
   {
     "policy_name": "Flexible Use of Paid Parental Leave",
     "party": "National",
-    "stated_position": "Modernise paid parental leave rules to give parents more flexibility in sharing leave entitlements.",
+    "stated_position": "Modernise paid parental leave rules to give parents more flexibility to share their leave entitlements.",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -53,9 +53,9 @@
     "policy_name": "Healthy People",
     "party": "Opportunity",
     "stated_position": "A 10-year health plan that properly funds health workers and focuses on preventing illness.",
-    "amount": "",
-    "percentage_target": "9% of GDP",
-    "start_date": "2025-11-03T00:00:00Z",
+    "amount": "$9",
+    "percentage_target": "9%",
+    "start_date": "2023-01-01T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
     "is_costed": true
   }
