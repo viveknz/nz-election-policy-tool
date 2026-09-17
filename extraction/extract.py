@@ -8,8 +8,14 @@ docs/08_extraction_schema.md (Round 4).
 
 Design decisions baked in here, all documented in docs/08_extraction_schema.md:
 - source_url and is_costed are NOT asked of the model -- source_url is known by
-  the caller, is_costed is derived from amount. Asking the model for either
-  produced hallucination/contradiction in testing.
+  the caller, is_costed is derived from whether amount or percentage_target is
+  non-empty. Asking the model for either produced hallucination/contradiction
+  in testing.
+- percentage_target is a separate field from amount, for fiscal commitments
+  stated as a share (e.g. "9% of GDP") rather than a dollar figure -- kept
+  distinct because Treasury/RBNZ baselines use both formats, and merging them
+  into one field would lose which kind of figure is actually being compared
+  later.
 - temperature=0 for consistency (not a guarantee of correctness, but the best
   available default for a factual task).
 - Every free-text field is length-constrained; amount also has a regex
@@ -71,7 +77,13 @@ SCHEMA = {
             "type": "string",
             "maxLength": 40,
             "pattern": "^(\\$[0-9][0-9,\\.]*\\s?(million|billion|m|bn)?)?$",
-            "description": "The stated dollar figure, exactly as given in the text, wherever it appears -- including inside an action description like 'establish a $220 million fund' (extract '$220 million'), not only an explicit 'cost:' statement. Use an empty string only if no dollar figure appears anywhere in the text at all.",
+            "description": "The stated dollar figure, exactly as given in the text, wherever it appears -- including inside an action description like 'establish a $220 million fund' (extract '$220 million'), not only an explicit 'cost:' statement. Use an empty string only if no dollar figure appears anywhere in the text at all. Do NOT use this field for a percentage (e.g. '9% of GDP') -- that goes in percentage_target instead.",
+        },
+        "percentage_target": {
+            "type": "string",
+            "maxLength": 40,
+            "pattern": "^([0-9]{1,3}(\\.[0-9]+)?%[^\\n]{0,30})?$",
+            "description": "A stated percentage-based fiscal commitment, exactly as given (e.g. '9% of GDP'), when the policy quantifies its fiscal ambition as a share of something rather than a dollar amount. Use an empty string if no percentage figure is stated. This is distinct from amount -- a policy can have one, the other, both, or neither.",
         },
         "start_date": {
             "type": "string",
@@ -84,10 +96,36 @@ SCHEMA = {
         "party",
         "stated_position",
         "amount",
+        "percentage_target",
         "start_date",
     ],
     "additionalProperties": False,
 }
+
+
+def _validate_percentage_against_source(value: str, source_text: str, party: str) -> str:
+    """
+    Same fabrication-check principle as _validate_against_source, applied to
+    percentage_target: the number before the '%' must actually appear in the
+    source text, or the value is discarded as likely fabricated.
+    """
+    if not value:
+        return value
+
+    match = re.match(r"([0-9]{1,3}(?:\.[0-9]+)?)%", value)
+    if not match:
+        return value  # shouldn't happen given the schema's regex, but be safe
+
+    number = match.group(1)
+    if number not in source_text:
+        logger.warning(
+            "Discarding percentage_target for %s -- number not found in the "
+            "source text (likely fabricated): %r",
+            party, value,
+        )
+        return ""
+
+    return value
 
 
 def get_client() -> OpenAI:
@@ -197,19 +235,26 @@ def extract_policy(
             )
             continue
 
-        # source_url is known by the caller. amount and start_date are
-        # validated against the actual source text before being trusted --
-        # see _validate_against_source's docstring for why this exists.
-        # is_costed is derived from amount only after that validation, so a
-        # discarded fabricated amount correctly flips is_costed to False.
+        # source_url is known by the caller. amount, percentage_target, and
+        # start_date are all validated against the actual source text before
+        # being trusted -- see the validation helpers' docstrings.
+        # is_costed is True if EITHER a dollar amount or a percentage target
+        # was found and validated -- a policy quantifying its fiscal
+        # ambition as "9% of GDP" is just as much a checkable claim as one
+        # quantifying it in dollars, and both matter for later fiscal
+        # comparison against Treasury/RBNZ baselines (which themselves use
+        # both dollar and %GDP figures -- see docs/02_data_sources.md).
         parsed["amount"] = _validate_against_source(
             parsed.get("amount", ""), policy_text, "amount", party
+        )
+        parsed["percentage_target"] = _validate_percentage_against_source(
+            parsed.get("percentage_target", ""), policy_text, party
         )
         parsed["start_date"] = _validate_against_source(
             parsed.get("start_date", ""), policy_text, "start_date", party
         )
         parsed["source_url"] = source_url
-        parsed["is_costed"] = bool(parsed.get("amount"))
+        parsed["is_costed"] = bool(parsed.get("amount")) or bool(parsed.get("percentage_target"))
 
         return parsed
 

@@ -282,3 +282,54 @@ every invented placeholder example used earlier in `01_framing.md`.
     hosted backend. Design pipelines assuming genuine non-determinism is
     possible even at the most conservative setting, rather than treating a
     single successful run as proof of stability.
+
+---
+
+## Round 6 (17 Sep 2026): two real schema gaps found via Greens and Opportunity
+
+Extending the corpus to Greens and Opportunity surfaced two distinct gaps —
+one a genuine schema limitation, one a genuine data-source limitation. Both
+addressed rather than left as silent blind spots.
+
+### Gap 1: percentage-of-GDP fiscal commitments (schema gap, fixed)
+
+Opportunity's Healthy People policy commits to lifting health funding to "9%
+of GDP" — a real, quantified fiscal claim, but not a dollar figure. The
+existing `amount` field (deliberately dollar-only, via its regex) correctly
+declined to force this into itself, but the claim was then invisible to
+`is_costed` entirely — a real fiscal commitment silently untracked.
+
+**This isn't a minor edge case.** Treasury's own BEFU figures
+(`02_data_sources.md`) are themselves stated as %GDP ("OBEGALx deficit 2.4% of
+GDP", "net core Crown debt peaks 46.1% of GDP") — so this exact format is what
+Fiscal Compare will need to match against baselines later, not a rare
+one-off.
+
+**Fix:** added `percentage_target` as its own field, separate from `amount`
+(never merged into it — keeping them distinct preserves which kind of figure
+is actually being compared downstream). Same discipline as every other field:
+`maxLength`, a regex pattern, and a source-text validation check (the number
+before the `%` must appear in the real text, or it's discarded as likely
+fabricated — same principle as the year-fabrication check from Round 5).
+`is_costed` is now `True` if *either* `amount` or `percentage_target` is
+non-empty.
+
+### Gap 2: costing that exists only in a linked PDF, not the crawled HTML (data-source gap, partially resolved)
+
+National's "extend to 30 weeks" paid parental leave page links to a PDF fact
+sheet that (per third-party reporting) contains the actual costed figures.
+The page's own HTML text doesn't state them.
+
+**Attempted resolution:** tried to fetch the PDF directly. **Could not** —
+the fetch tool restricts URLs that weren't already surfaced by a prior search
+or fetch result, and this asset link fell into that restriction within this
+session. **What was recovered instead:** three independent news outlets (NZ
+Herald, RNZ, b2bnews) converge on the same year-by-year figures — $27m in
+2027/28, $56.6m in 2028/29, $119m in 2029/30. These three years sum to
+$202.6m, which does **not** match NZ Herald's separately-reported headline
+figure of "$327 million over four years" — implying a fourth year's figure
+that none of these three sources actually states. **This discrepancy is
+recorded, not resolved** — the real fix needs either a different fetch
+mechanism capable of reaching the PDF directly, or a human downloading it
+manually the same way NZ First's manual-capture backlog item works. Added to
+`07_backlog.md`.

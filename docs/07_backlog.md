@@ -39,3 +39,14 @@ Not a wishlist; only things with a concrete reason they're waiting.
   reason (real routing failures, or a need to debug production behaviour) to
   justify the added complexity — matches the project's stated principle of not
   over-engineering ahead of actual need.
+
+- **Fetch National's Paid Parental Leave PDF fact sheet directly** (raised 17
+  Sep 2026, `08_extraction_schema.md` Round 6). The party's own PDF, linked
+  from `national.org.nz/news/paid-parental-leave`, likely contains the actual
+  costed figures for the 26-to-30-week extension — but it could not be
+  fetched directly in-session (the fetch tool restricts URLs not already
+  surfaced by a prior search/fetch result). Three independent news sources
+  give partial, non-reconciling figures ($27m/$56.6m/$119m across three years,
+  summing to $202.6m, vs. a separately-reported $327m four-year headline
+  total). **Not yet resolved** — needs either a different fetch mechanism or
+  a manual download, the same pattern as the NZ First backlog item above.
