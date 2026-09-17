@@ -106,8 +106,12 @@ SCHEMA = {
 def _validate_percentage_against_source(value: str, source_text: str, party: str) -> str:
     """
     Same fabrication-check principle as _validate_against_source, applied to
-    percentage_target: the number before the '%' must actually appear in the
-    source text, or the value is discarded as likely fabricated.
+    percentage_target -- but checking only that the number appears somewhere
+    in the source text was too permissive: it let through '0.8% FTE'
+    (fabricated from real text reading '0.8 FTE', no % anywhere) and '40%'
+    (fabricated from '2040', a year, by treating a substring of it as a
+    percentage). Requires the literal '<number>%' pattern in the source
+    text, not just the bare number in isolation.
     """
     if not value:
         return value
@@ -117,11 +121,11 @@ def _validate_percentage_against_source(value: str, source_text: str, party: str
         return value  # shouldn't happen given the schema's regex, but be safe
 
     number = match.group(1)
-    if number not in source_text:
+    if not re.search(re.escape(number) + r"\s?%", source_text):
         logger.warning(
-            "Discarding percentage_target for %s -- number not found in the "
-            "source text (likely fabricated): %r",
-            party, value,
+            "Discarding percentage_target for %s -- '%s%%' not found as a "
+            "literal percentage in the source text (likely fabricated): %r",
+            party, number, value,
         )
         return ""
 

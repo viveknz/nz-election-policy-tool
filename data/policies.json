@@ -4,24 +4,27 @@
     "party": "Labour",
     "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
     "amount": "$525 million",
-    "start_date": "2027 (job offers start in 2027, for graduates sitting State ",
+    "percentage_target": "0.8% FTE (minimum)",
+    "start_date": "2027 (job offers start from 2027, for graduates sitting the ",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true
   },
   {
     "policy_name": "Te Tiriti Entrenchment Policy",
     "party": "Te Pati Maori",
-    "stated_position": "Launched today",
+    "stated_position": "Constitutional reform package",
     "amount": "$220 million",
-    "start_date": "over four years (Matike Mai Fund) starting immediately (as a",
+    "percentage_target": "40%",
+    "start_date": "",
     "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
     "is_costed": true
   },
   {
     "policy_name": "Flexible Use of Paid Parental Leave",
     "party": "National",
-    "stated_position": "Modernise paid parental leave rules to give parents more flexibility to share their leave entitlements.",
+    "stated_position": "Modernise paid parental leave rules to give parents more flexibility in sharing leave entitlements.",
     "amount": "",
+    "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.national.org.nz/policies/flexible-use-of-paid-parental-leave",
     "is_costed": false
@@ -31,7 +34,8 @@
     "party": "National",
     "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029, starting with an increase to 27 weeks in next year's Budget and followed by further increases in",
     "amount": "",
-    "start_date": "2027-07-01T00:00:00Z",
+    "percentage_target": "",
+    "start_date": "2027-07-01",
     "source_url": "https://www.national.org.nz/news/paid-parental-leave",
     "is_costed": false
   },
@@ -40,6 +44,7 @@
     "party": "The Green Party",
     "stated_position": "Reform social support services to enable equitable access for all whanau, extend paid parental leave, reform Working for Families and lift minimum wage entitlements to eliminate child poverty in Aotar",
     "amount": "",
+    "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.greens.org.nz/children_policy",
     "is_costed": false
@@ -47,10 +52,11 @@
   {
     "policy_name": "Healthy People",
     "party": "Opportunity",
-    "stated_position": "Health is too important to be a political football; a 10-year plan is needed.",
+    "stated_position": "A 10-year health plan that properly funds health workers and focuses on preventing illness.",
     "amount": "",
-    "start_date": "2023-01-01T00:00:00Z",
+    "percentage_target": "9% of GDP",
+    "start_date": "2025-11-03T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
-    "is_costed": false
+    "is_costed": true
   }
 ]
