@@ -101,32 +101,38 @@ def get_client() -> OpenAI:
     return OpenAI(base_url=BASE_URL, api_key=api_key)
 
 
-def _numeric_tokens(text: str) -> set[str]:
-    """All digit sequences in a string, e.g. '2027' or '525' or '01'."""
-    return set(re.findall(r"\d+", text or ""))
+def _year_tokens(text: str) -> set[str]:
+    """Four-digit year-like sequences in a string, e.g. '2027' from '2027-07-01'
+    or from '1 July 2027'. Deliberately narrower than 'every digit sequence':
+    day/month numbers get reformatted in legitimate, correct ways (a source
+    that spells out 'July' won't literally contain '07'), and checking those
+    produced a false-positive rejection of a genuinely correct date. Years are
+    where the real fabrication risk was actually observed."""
+    return set(re.findall(r"(?<!\d)\d{4}(?!\d)", text or ""))
 
 
 def _validate_against_source(value: str, source_text: str, field_name: str, party: str) -> str:
     """
-    Discard a value if it contains numbers that don't appear anywhere in the
+    Discard a value if it contains a year that doesn't appear anywhere in the
     source text -- a direct fabrication check, added after finding the model
     invent a fully fictional ISO date ('2023-06-14T00:00:00+00:00') for a
     policy whose real text contains no dates at all (docs/08_extraction_schema.md,
-    Round 5). A value with no numbers (e.g. 'immediately', 'today') is not
-    checked here -- this specifically targets fabricated dates/amounts, the
-    demonstrated failure mode, not every possible wording choice.
+    Round 5). Checks years only, not every digit (day/month numbers are
+    legitimately reformatted -- e.g. 'July' becoming '07' -- and checking
+    those produced a false positive on a correct date). A value with no
+    4-digit year is not checked here.
     """
     if not value:
         return value
 
-    value_tokens = _numeric_tokens(value)
-    if not value_tokens:
+    value_years = _year_tokens(value)
+    if not value_years:
         return value
 
-    source_tokens = _numeric_tokens(source_text)
-    if not value_tokens.issubset(source_tokens):
+    source_years = _year_tokens(source_text)
+    if not value_years.issubset(source_years):
         logger.warning(
-            "Discarding %s for %s -- contains numbers not found in the source "
+            "Discarding %s for %s -- contains a year not found in the source "
             "text (likely fabricated): %r",
             field_name, party, value,
         )
