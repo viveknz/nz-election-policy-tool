@@ -30,6 +30,15 @@ USER_AGENT = (
     "Mozilla/5.0 (compatible; NZElectionPolicyBot/1.0; "
     "+https://github.com/viveknz/nz-election-policy-tool)"
 )
+# Some sites (e.g. National's, Next.js/edge-hosted) return a synthetic 404 to
+# requests that look bot-like beyond just the user agent -- missing these
+# ordinary browser headers was enough to trigger a false 404 on a page
+# confirmed live and fetchable via a real browser-equivalent request.
+REQUEST_HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-NZ,en;q=0.9",
+}
 TIMEOUT_SECONDS = 15
 
 # Tags whose text is noise, not policy content -- scripts, styles, and
@@ -62,7 +71,7 @@ def _check_robots(url: str) -> bool:
     rp = RobotFileParser()
     try:
         response = requests.get(
-            robots_url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT_SECONDS
+            robots_url, headers=REQUEST_HEADERS, timeout=TIMEOUT_SECONDS
         )
         if response.status_code == 404:
             # No robots.txt at all -- per spec, this means everything is
@@ -98,7 +107,7 @@ def fetch_policy_text(url: str, timeout: int = TIMEOUT_SECONDS) -> str | None:
 
     try:
         response = requests.get(
-            url, headers={"User-Agent": USER_AGENT}, timeout=timeout
+            url, headers=REQUEST_HEADERS, timeout=timeout
         )
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
