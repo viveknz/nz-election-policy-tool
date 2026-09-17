@@ -2,18 +2,29 @@
   {
     "policy_name": "Graduate Nurse Job Guarantee",
     "party": "Labour",
-    "stated_position": "Labour will offer every eligible New Zealand-trained graduate nurse a job in the health system.",
+    "stated_position": "Labour will guarantee a job for every eligible New Zealand‑trained graduate nurse, offering positions from 2027 onward at a minimum of 0.8 FTE, through the existing Advanced Choice of Employment (ACE)",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027 (job offers start in 2027, applies to graduates sitting",
+    "start_date": "2027-01-01T00:00:00Z",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true,
     "id": "labour-graduate-nurse-job-guarantee"
   },
   {
+    "policy_name": "Te Tiriti Entrenchment Policy",
+    "party": "Te Pati Maori",
+    "stated_position": "The party will make Crown obligations under Te Tiriti legally enforceable and resource the next stage of Māori‑led constitutional transformation by establishing a $220 million Matike Mai Fund, an inde",
+    "amount": "$220 million",
+    "percentage_target": "",
+    "start_date": "",
+    "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
+    "is_costed": true,
+    "id": "te-pati-maori-te-tiriti-entrenchment-policy"
+  },
+  {
     "policy_name": "Flexible Use of Paid Parental Leave",
     "party": "National",
-    "stated_position": "Modernise paid parental leave rules to give parents more flexibility in sharing leave entitlements.",
+    "stated_position": "National will reform paid parental leave to let both parents share and split their leave entitlements flexibly—taking it at the same time, one after the other, or in overlapping installments—without任何",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -22,20 +33,20 @@
     "id": "national-flexible-use-of-paid-parental-leave"
   },
   {
-    "policy_name": "National to extend and improve paid parental leave",
+    "policy_name": "Paid Parental Leave Extension and Reform",
     "party": "National",
-    "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029, starting with an increase to 27 weeks in next year's Budget and followed by further increases in",
+    "stated_position": "National will gradually extend paid parental leave from 26 to 30 weeks by 2029, beginning with a rise to 27 weeks in the next budget and further increases in the following two budgets; it will allow a",
     "amount": "",
     "percentage_target": "",
-    "start_date": "2027-07-01",
+    "start_date": "",
     "source_url": "https://www.national.org.nz/news/paid-parental-leave",
     "is_costed": false,
-    "id": "national-national-to-extend-and-improve-paid-parental-leave"
+    "id": "national-paid-parental-leave-extension-and-reform"
   },
   {
     "policy_name": "Children's Policy",
     "party": "The Green Party",
-    "stated_position": "reform social support services to enable equitable access for all whanau, extend paid parental leave, reform Working for Families and lift minimum wage entitlements to eliminate child poverty in Aotar",
+    "stated_position": "The Green Party will overhaul social support services to guarantee equitable access for all whānau, extend paid parental leave, reform the Working for Families tax credit, raise the minimum wage to er",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -46,18 +57,18 @@
   {
     "policy_name": "Healthy People",
     "party": "Opportunity",
-    "stated_position": "Health is too important to be a political football; a 10-year plan is needed.",
+    "stated_position": "Implement a comprehensive, cross‑party 10‑year health strategy that secures sustainable funding for the health system, shifts focus to primary and preventative care, and safeguards health policy from業",
     "amount": "",
-    "percentage_target": "9% of GDP",
-    "start_date": "2023-01-01T00:00:00Z",
+    "percentage_target": "",
+    "start_date": "2025-01-01T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
-    "is_costed": true,
+    "is_costed": false,
     "id": "opportunity-healthy-people"
   },
   {
     "policy_name": "Incomes Policy",
-    "party": "The Maori Party",
-    "stated_position": "The current income and social security system is broken and has never worked for Māori. Everyone should have enough income to live dignified, meaningful lives, and lifting whānau out of poverty is not",
+    "party": "Māori Party",
+    "stated_position": "The Māori Party will immediately raise the minimum wage to $25 per hour and ensure annual increases keep pace with cost‑of‑living pressures; guarantee pay equity for Māori nurses and teachers; double基",
     "amount": "",
     "percentage_target": "",
     "start_date": "",

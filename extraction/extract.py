@@ -269,7 +269,11 @@ def extract_policy(
         # temperature=0 can never escape a deterministic bad output; a small
         # nudge gives later attempts an actual chance to differ. The first
         # attempt stays at 0 for the consistency benefits documented earlier.
-        attempt_temperature = 0 if attempt == 1 else 0.3
+        # DIAGNOSTIC: temperature nudge temporarily disabled (forced to 0 on
+        # every attempt) to isolate whether it's the cause of garbled
+        # non-English characters observed in the last run. Revert this once
+        # the cause is confirmed either way.
+        attempt_temperature = 0
 
         try:
             response = client.chat.completions.create(
