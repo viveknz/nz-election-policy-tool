@@ -46,14 +46,31 @@ def _check_robots(url: str) -> bool:
     unrelated failure -- but logs clearly either way, since a silent
     assumption here is exactly the kind of thing this project's discipline
     has caught before.
+
+    Deliberately does NOT use RobotFileParser.read(), which fetches
+    robots.txt internally via urllib.request using Python's default user
+    agent -- a generic string many WAFs/CDNs block or challenge, causing a
+    false "disallow everything" even on sites that allow normal crawling
+    (confirmed: Labour's real page fetches fine via our own requests
+    session, but was wrongly reported as robots.txt-blocked before this
+    fix). Instead, robots.txt is fetched with the same working session and
+    user agent used for the real page, then handed to RobotFileParser.parse().
     """
     parsed = urlparse(url)
     robots_url = f"{parsed.scheme}://{parsed.netloc}/robots.txt"
+
     rp = RobotFileParser()
     try:
-        rp.set_url(robots_url)
-        rp.read()
-    except Exception as e:
+        response = requests.get(
+            robots_url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT_SECONDS
+        )
+        if response.status_code == 404:
+            # No robots.txt at all -- per spec, this means everything is
+            # allowed, not that everything is disallowed.
+            return True
+        response.raise_for_status()
+        rp.parse(response.text.splitlines())
+    except requests.exceptions.RequestException as e:
         logger.warning(
             "Could not read robots.txt at %s (%s) -- proceeding, since an "
             "unreadable robots.txt is not the same as an explicit disallow.",
