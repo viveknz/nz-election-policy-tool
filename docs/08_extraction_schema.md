@@ -333,3 +333,50 @@ recorded, not resolved** — the real fix needs either a different fetch
 mechanism capable of reaching the PDF directly, or a human downloading it
 manually the same way NZ First's manual-capture backlog item works. Added to
 `07_backlog.md`.
+
+### A third fabrication found while testing the percentage_target fix
+
+The first version of `percentage_target` validation only checked that the
+*number* appeared somewhere in the source — not that it was actually attached
+to a `%` sign there. This let through two fabrications: Labour's
+`"0.8% FTE (minimum)"` (the real text says "0.8 FTE", no `%` anywhere) and Te
+Pāti Māori's `"40%"` (fabricated from "40" inside "2040", a year, not a
+percentage). **Fix:** require the literal `<number>%` substring in the source
+text, not just the bare number.
+
+Testing that fix then surfaced a **fourth**, different fabrication:
+Opportunity's `amount` came back as `"$9"` — cross-contaminated from the
+correctly-extracted "9% of GDP" into a fabricated dollar figure, in a source
+that states no dollar amount at all. This revealed that `amount` had never
+had a real content check — only the schema's format regex, which confirms a
+string *looks like* a dollar figure without confirming its digits are
+grounded in the source. **Fix:** added `_validate_amount_against_source`, the
+same literal-substring-in-source check already applied to
+`percentage_target`.
+
+**After both fixes, re-running surfaced an honest trade-off rather than a new
+bug:** Opportunity's real "9% of GDP" was correctly validated when the model
+extracted it, but on a later identical re-run the model simply didn't extract
+it at all (no discard warning — the field was empty from the model itself,
+not rejected by validation). This is the same temperature=0 non-determinism
+documented in Round 5, now observed on a new field. **This is the accepted
+trade-off, not a bug to chase further right now**: an honest empty result
+when the model misses a real value is preferable to a fabricated-but-plausible
+one slipping through — consistent with the project's core rule to state only
+what's checkable. A missed real value can be recovered by re-running; a
+fabricated one is much harder to catch after the fact.
+
+## Standing lessons, updated after Round 6
+
+11. **A format-valid regex is not a content-grounding check.** `amount`
+    passed its schema's dollar-format pattern for months without ever being
+    checked against the actual source text — the format check only confirms
+    a string *looks like* the right kind of value, not that its specific
+    digits are real. Every quantified field needs both.
+12. **A validation check needs to verify the exact claimed relationship, not
+    just that its parts exist somewhere.** Checking "does this number appear
+    anywhere in the source" let two different numbers slip through
+    (`0.8` from "0.8 FTE", `40` from "2040") because each number was real —
+    just not attached to the thing being claimed about it (a percentage). The
+    fix was checking the literal combined pattern (`<number>%`, `$<number>`),
+    not the number in isolation.

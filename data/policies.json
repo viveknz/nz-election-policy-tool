@@ -2,10 +2,10 @@
   {
     "policy_name": "Graduate Nurse Job Guarantee",
     "party": "Labour",
-    "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
+    "stated_position": "Labour will offer every eligible New Zealand-trained graduate nurse a job in the health system.",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027 (job offers start in 2027, applies to graduates sitting",
+    "start_date": "2027 (job offers start in 2027, for graduates sitting State ",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true
   },
@@ -22,7 +22,7 @@
   {
     "policy_name": "Flexible Use of Paid Parental Leave",
     "party": "National",
-    "stated_position": "Modernise paid parental leave rules to give parents more flexibility to share their leave entitlements.",
+    "stated_position": "Modernise paid parental leave rules to give parents more flexibility in sharing leave entitlements.",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -52,11 +52,11 @@
   {
     "policy_name": "Healthy People",
     "party": "Opportunity",
-    "stated_position": "A 10-year health plan that properly funds health workers and focuses on preventing illness.",
-    "amount": "$9",
-    "percentage_target": "9%",
+    "stated_position": "Health is too important to be a political football; a 10-year plan is needed.",
+    "amount": "",
+    "percentage_target": "",
     "start_date": "2023-01-01T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
-    "is_costed": true
+    "is_costed": false
   }
 ]
