@@ -163,6 +163,24 @@ def _validate_percentage_against_source(value: str, source_text: str, party: str
     return value
 
 
+def _is_placeholder_position(value: str) -> bool:
+    """
+    Detects a content-free structural placeholder in stated_position --
+    e.g. 'The Maori Party will:' or 'will implement the following measures'
+    -- observed twice on the same list-style source even after tightening
+    the schema's field description, which wasn't strong enough on its own
+    to stop the pattern. Treated the same as a JSON parse failure: retry the
+    call rather than accept a summary that describes the text's structure
+    instead of its substance.
+    """
+    stripped = value.strip()
+    if stripped.endswith(":"):
+        return True
+    if len(stripped) < 15:
+        return True
+    return False
+
+
 def get_client() -> OpenAI:
     """Create the Nebius Token Factory client. Raises if NEBIUS_API_KEY is unset."""
     api_key = os.environ.get("NEBIUS_API_KEY")
@@ -270,6 +288,14 @@ def extract_policy(
             )
             continue
 
+        if _is_placeholder_position(parsed.get("stated_position", "")):
+            logger.warning(
+                "stated_position for %s (attempt %d/%d) is a content-free "
+                "placeholder, not a real summary -- retrying: %r",
+                party, attempt, max_retries, parsed.get("stated_position"),
+            )
+            continue
+
         # source_url is known by the caller. amount, percentage_target, and
         # start_date are all validated against the actual source text before
         # being trusted -- see the validation helpers' docstrings.
@@ -294,7 +320,8 @@ def extract_policy(
         return parsed
 
     logger.error(
-        "Extraction failed for %s after %d attempts -- all returned unparseable JSON.",
+        "Extraction failed for %s after %d attempts -- every attempt either "
+        "returned unparseable JSON or a content-free placeholder summary.",
         party, max_retries,
     )
     return None

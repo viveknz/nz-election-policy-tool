@@ -5,7 +5,7 @@
     "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027 (roles offered on graduation, starting in 2027) and for",
+    "start_date": "2027 (roles offered from 2027 onward, for graduates sitting ",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true,
     "id": "labour-graduate-nurse-job-guarantee"
@@ -13,7 +13,7 @@
   {
     "policy_name": "Te Tiriti Entrenchment Policy",
     "party": "Te Pati Maori",
-    "stated_position": "Launched today",
+    "stated_position": "Constitutional reform package",
     "amount": "$220 million",
     "percentage_target": "",
     "start_date": "",
@@ -35,10 +35,10 @@
   {
     "policy_name": "National to extend and improve paid parental leave",
     "party": "National",
-    "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029.",
+    "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029, starting with an increase to 27 weeks in next year's Budget and followed by further increases in",
     "amount": "",
     "percentage_target": "",
-    "start_date": "",
+    "start_date": "2027-07-01",
     "source_url": "https://www.national.org.nz/news/paid-parental-leave",
     "is_costed": false,
     "id": "national-national-to-extend-and-improve-paid-parental-leave"
@@ -67,11 +67,11 @@
   },
   {
     "policy_name": "Incomes Policy",
-    "party": "Maori Party",
-    "stated_position": "The Maori Party will implement the following measures:",
+    "party": "Te Pati Maori",
+    "stated_position": "The Maori Party will:",
     "amount": "",
     "percentage_target": "",
-    "start_date": "Immediately (as per policy) – no specific calendar date, but",
+    "start_date": "",
     "source_url": "https://www.maoriparty.org.nz/income",
     "is_costed": false,
     "id": "te-pati-maori-incomes-policy"
