@@ -2,24 +2,13 @@
   {
     "policy_name": "Graduate Nurse Job Guarantee",
     "party": "Labour",
-    "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
+    "stated_position": "Labour will offer every eligible New Zealand-trained graduate nurse a job in the health system.",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027 (roles offered from 2027 onward, for graduates sitting ",
+    "start_date": "2027 (job offers start in 2027, applies to graduates sitting",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true,
     "id": "labour-graduate-nurse-job-guarantee"
-  },
-  {
-    "policy_name": "Te Tiriti Entrenchment Policy",
-    "party": "Te Pati Maori",
-    "stated_position": "Constitutional reform package",
-    "amount": "$220 million",
-    "percentage_target": "",
-    "start_date": "",
-    "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
-    "is_costed": true,
-    "id": "te-pati-maori-te-tiriti-entrenchment-policy"
   },
   {
     "policy_name": "Flexible Use of Paid Parental Leave",
@@ -46,7 +35,7 @@
   {
     "policy_name": "Children's Policy",
     "party": "The Green Party",
-    "stated_position": "Reform social support services to enable equitable access for all whanau, extend paid parental leave, reform Working for Families and lift minimum wage entitlements to eliminate child poverty in Aotar",
+    "stated_position": "reform social support services to enable equitable access for all whanau, extend paid parental leave, reform Working for Families and lift minimum wage entitlements to eliminate child poverty in Aotar",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -60,15 +49,15 @@
     "stated_position": "Health is too important to be a political football; a 10-year plan is needed.",
     "amount": "",
     "percentage_target": "9% of GDP",
-    "start_date": "2025-01-01T00:00:00Z",
+    "start_date": "2023-01-01T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
     "is_costed": true,
     "id": "opportunity-healthy-people"
   },
   {
     "policy_name": "Incomes Policy",
-    "party": "Te Pati Maori",
-    "stated_position": "The Maori Party will:",
+    "party": "The Maori Party",
+    "stated_position": "The current income and social security system is broken and has never worked for Māori. Everyone should have enough income to live dignified, meaningful lives, and lifting whānau out of poverty is not",
     "amount": "",
     "percentage_target": "",
     "start_date": "",

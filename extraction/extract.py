@@ -16,8 +16,10 @@ Design decisions baked in here, all documented in docs/08_extraction_schema.md:
   distinct because Treasury/RBNZ baselines use both formats, and merging them
   into one field would lose which kind of figure is actually being compared
   later.
-- temperature=0 for consistency (not a guarantee of correctness, but the best
-  available default for a factual task).
+- temperature=0 on the first attempt only (best default for a factual task);
+  retries nudge temperature up slightly, since identical retries at
+  temperature=0 can reproduce the exact same wrong output (observed directly:
+  three straight retries all returning the placeholder "Launched today").
 - Every free-text field is length-constrained; amount also has a regex
   pattern. Unconstrained fields produced repetition loops and hallucination in
   testing.
@@ -248,10 +250,27 @@ def extract_policy(
     """
     prompt = (
         f"Extract the policy details from this real {party} policy page text.\n\n"
+        "For stated_position specifically: summarize the actual substance of "
+        "what the party will do, never a content-free description of the "
+        "text's structure. For example, if the source is a press release "
+        "announcing a policy today, a BAD stated_position is 'Launched "
+        "today' -- true, but says nothing about the policy itself. A GOOD "
+        "stated_position states what the policy actually does, e.g. 'Make "
+        "Crown obligations under Te Tiriti legally enforceable and fund "
+        "Maori-led constitutional transformation.'\n\n"
         f"Policy text:\n{policy_text}"
     )
 
     for attempt in range(1, max_retries + 1):
+        # Nudge temperature up on retries only. Round 5/6 found this model can
+        # return the IDENTICAL output on repeated identical calls at
+        # temperature=0 -- observed here as three straight retries all
+        # producing "Launched today". Retrying the identical request at
+        # temperature=0 can never escape a deterministic bad output; a small
+        # nudge gives later attempts an actual chance to differ. The first
+        # attempt stays at 0 for the consistency benefits documented earlier.
+        attempt_temperature = 0 if attempt == 1 else 0.3
+
         try:
             response = client.chat.completions.create(
                 model=MODEL,
@@ -265,7 +284,7 @@ def extract_policy(
                     },
                 },
                 max_tokens=MAX_TOKENS,
-                temperature=0,
+                temperature=attempt_temperature,
             )
         except (BadRequestError, APIConnectionError, APIError) as e:
             # An API-level error is not something a retry on the same input
