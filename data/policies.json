@@ -2,12 +2,13 @@
   {
     "policy_name": "Graduate Nurse Job Guarantee",
     "party": "Labour",
-    "stated_position": "Labour will offer every eligible New Zealand-trained graduate nurse a job in the health system.",
+    "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027 (job offers start in 2027, for graduates sitting State ",
+    "start_date": "2027 (roles offered starting in 2027, for graduates sitting ",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
-    "is_costed": true
+    "is_costed": true,
+    "id": "labour-graduate-nurse-job-guarantee"
   },
   {
     "policy_name": "Te Tiriti Entrenchment Policy",
@@ -17,17 +18,19 @@
     "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
-    "is_costed": true
+    "is_costed": true,
+    "id": "te-pati-maori-te-tiriti-entrenchment-policy"
   },
   {
     "policy_name": "Flexible Use of Paid Parental Leave",
     "party": "National",
-    "stated_position": "Modernise paid parental leave rules to give parents more flexibility in sharing leave entitlements.",
+    "stated_position": "Modernise paid parental leave rules to give parents more flexibility to share their leave entitlements.",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.national.org.nz/policies/flexible-use-of-paid-parental-leave",
-    "is_costed": false
+    "is_costed": false,
+    "id": "national-flexible-use-of-paid-parental-leave"
   },
   {
     "policy_name": "National to extend and improve paid parental leave",
@@ -35,9 +38,10 @@
     "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029, starting with an increase to 27 weeks in next year's Budget and followed by further increases in",
     "amount": "",
     "percentage_target": "",
-    "start_date": "2027-07-01",
+    "start_date": "1 July 2027",
     "source_url": "https://www.national.org.nz/news/paid-parental-leave",
-    "is_costed": false
+    "is_costed": false,
+    "id": "national-national-to-extend-and-improve-paid-parental-leave"
   },
   {
     "policy_name": "Children's Policy",
@@ -47,16 +51,18 @@
     "percentage_target": "",
     "start_date": "",
     "source_url": "https://www.greens.org.nz/children_policy",
-    "is_costed": false
+    "is_costed": false,
+    "id": "greens-children-s-policy"
   },
   {
     "policy_name": "Healthy People",
     "party": "Opportunity",
-    "stated_position": "Health is too important to be a political football; a 10-year plan is needed.",
+    "stated_position": "A 10-year health plan that properly funds health workers and focuses on preventing illness.",
     "amount": "",
-    "percentage_target": "",
-    "start_date": "2023-01-01T00:00:00Z",
+    "percentage_target": "9% of GDP",
+    "start_date": "2025-01-01T00:00:00Z",
     "source_url": "https://www.opportunity.org.nz/healthy_people",
-    "is_costed": false
+    "is_costed": true,
+    "id": "opportunity-healthy-people"
   }
 ]

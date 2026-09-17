@@ -56,11 +56,11 @@ generic "childcare" guess.
   name differs from a plain-English query" — to be confirmed once National's actual
   Paid Parental Leave page is fetched and profiled, the same way Labour's page was.
 
-## Open question carried forward — resolved
+## Open question carried forward — reopened
 
-~~Does any party frame a policy under "cost of living" as its own category name~~
-**Resolved 13 Sep 2026**: yes. Te Pāti Māori has a policy literally titled "Cost of
-living" (see `04_source_profiles.md`). Still worth checking whether National,
-Greens, and NZ First use the same framing or something different once their pages
-are profiled — this confirms at least one party matches voter-side language
-directly, it doesn't confirm all of them do.
+Does any party frame a policy under "cost of living" as its own category
+name? **Previously marked resolved on 13 Sep 2026, incorrectly** — the claim
+that Te Pāti Māori had a policy literally titled "Cost of living" turned out
+to be a mis-transcription on Claude's part, corrected in `04_source_profiles.md`
+on 17 Sep 2026 (the real page is titled "Income"). No party confirmed so far
+uses "cost of living" as an actual policy title. Still genuinely open.

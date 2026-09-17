@@ -103,14 +103,22 @@ Every one of the 17 policies follows an identical, clean template:
 This is more extraction-friendly than Labour's page, where costings were buried in
 a separate FAQ block disconnected from the policy tiles.
 
-### Direct answer to the open question from Labour's profile
+### Direct answer to the open question from Labour's profile — later corrected
 
-**"Cost of living" is a real, named policy category for Te Pāti Māori** — 17th item
-on the list, titled exactly "Cost of living," covering income support, welfare, and
-transport affordability. This directly confirms `05_voter_topics.md`'s top voter
-concern maps onto at least one party's own actual category name — worth testing
-whether National, Greens, and NZ First use the same or a different framing for the
-same concern once their pages are profiled.
+**Correction (17 Sep 2026):** the claim originally made here — that this
+policy is titled exactly "Cost of living" — was wrong. It was a
+mis-transcription made when first listing all 17 policy titles from the
+`/policy` page, never checked against the actual individual page. Fetching
+the real page (`maoriparty.org.nz/income`) directly shows its actual title is
+**"Income"** ("Incomes Policy"), covering minimum wage, benefit levels, pay
+equity, and student support — cost-of-living-adjacent in substance, but not
+the party's own category name. This is the same lesson as every other
+wrong-URL/wrong-name catch in this project (ACT's `/policy` vs `/policies`,
+TOP's rebrand to Opportunity): **a title noted from a listing page is an
+assumption until the individual page is actually fetched and checked.** The
+original open question — does any party use "cost of living" as an actual
+category name — remains genuinely open; no party confirmed so far uses that
+exact phrase as a policy title.
 
 ### Costing observed
 

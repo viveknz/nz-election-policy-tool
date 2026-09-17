@@ -222,6 +222,48 @@ In 2023, New Zealand ranked second in the world for protecting health policy
 from tobacco industry interference. By 2025, we ranked 53rd.
 """,
     },
+    {
+        "party": "Te Pati Maori",
+        "source_url": "https://www.maoriparty.org.nz/income",
+        # Real policy, correcting an earlier mis-transcription (see
+        # docs/04_source_profiles.md, 17 Sep correction) -- this was
+        # originally, wrongly, recorded as being titled "Cost of living";
+        # the real title is "Income". Good test case: contains a per-unit
+        # dollar figure ("$25 per hour"), not a lump-sum amount -- our
+        # amount regex only accepts a bare number optionally followed by
+        # million/billion/m/bn, so "$25 per hour" should NOT match it
+        # (correctly, since it's a wage rate, not a total policy cost) --
+        # testing whether the schema handles this distinction correctly
+        # rather than forcing a wrong match.
+        "text": """
+Incomes Policy
+
+Executive Summary:
+We have an economy and social security system that is broken, and that have
+never worked for Maori. No one should suffer the injustices of poverty,
+inequality, and a lack of life opportunities.
+
+Everyone should have enough income to live dignified, meaningful lives.
+Lifting whanau out of poverty is impossible if they do not have adequate
+incomes to survive with an ever-increasing cost of living.
+
+The Maori Party will:
+1. Immediately raise the minimum wage to $25 per hour and legislate for an
+   annual increase to keep up with cost of living increases
+2. Guarantee pay equity for Maori nurses and teachers
+3. Double baseline benefit levels
+4. Individualise benefits
+5. Remove financial penalties, sanctions, and work-test obligations
+6. Cancel income support related debt and ensure that additional grants do
+   not need to be paid back in future
+7. Raise abatement rates for benefits and student allowances
+8. Create a universal student allowance and double student allowance rates
+9. Introduce free public transport for students at all levels
+10. Write off the living cost component of all student loans and work
+    towards writing off the total student loan for those who work in
+    Aotearoa for a period of five years
+""",
+    },
 ]
 
 
