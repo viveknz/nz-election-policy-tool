@@ -1,0 +1,38 @@
+[
+  {
+    "policy_name": "Graduate Nurse Job Guarantee",
+    "party": "Labour",
+    "stated_position": "Offer every eligible New Zealand-trained graduate nurse a job in the health system",
+    "amount": "$525 million",
+    "start_date": "2027 (roles start in 2027, offers made to graduates sitting ",
+    "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
+    "is_costed": true
+  },
+  {
+    "policy_name": "Te Tiriti Entrenchment Policy",
+    "party": "Te Pati Maori",
+    "stated_position": "Launched today",
+    "amount": "$220 million",
+    "start_date": "over four years (Matike Mai Fund) starting immediately (as a",
+    "source_url": "https://www.maoriparty.org.nz/te_p_ti_m_ori_launches_te_tiriti_entrenchment_policy",
+    "is_costed": true
+  },
+  {
+    "policy_name": "Flexible Use of Paid Parental Leave",
+    "party": "National",
+    "stated_position": "Modernise parental leave rules to give parents more flexibility in sharing leave entitlements.",
+    "amount": "",
+    "start_date": "2023-06-20T00:00:00+00:00",
+    "source_url": "https://www.national.org.nz/policies/flexible-use-of-paid-parental-leave",
+    "is_costed": false
+  },
+  {
+    "policy_name": "National to extend and improve paid parental leave",
+    "party": "National",
+    "stated_position": "A re-elected National Government will gradually extend paid parental leave from 26 to 30 weeks by 2029.",
+    "amount": "",
+    "start_date": "next year's Budget (2025) increase to 27 weeks, followed by ",
+    "source_url": "https://www.national.org.nz/news/paid-parental-leave",
+    "is_costed": false
+  }
+]
