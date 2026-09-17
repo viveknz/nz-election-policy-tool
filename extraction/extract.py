@@ -184,6 +184,44 @@ def _is_placeholder_position(value: str) -> bool:
     return False
 
 
+def _is_placeholder_position(value: str) -> bool:
+    """
+    Detects a content-free structural placeholder in stated_position --
+    e.g. 'The Maori Party will:' or 'will implement the following measures'
+    -- observed twice on the same list-style source even after tightening
+    the schema's field description, which wasn't strong enough on its own
+    to stop the pattern. Treated the same as a JSON parse failure: retry the
+    call rather than accept a summary that describes the text's structure
+    instead of its substance.
+    """
+    stripped = value.strip()
+    if stripped.endswith(":"):
+        return True
+    if len(stripped) < 15:
+        return True
+    return False
+
+
+_CJK_PATTERN = re.compile(
+    r"[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]"
+)
+
+
+def _contains_unexpected_script(value: str) -> bool:
+    """
+    Detects CJK characters injected into what should be English text.
+    Confirmed directly (not assumed): raising temperature on retries caused
+    this; reverting to temperature=0 on every attempt greatly reduced but did
+    NOT fully eliminate it -- one instance still occurred at temperature=0 on
+    a retry (docs/08_extraction_schema.md, Round 7). This checks the actual
+    output rather than trusting a temperature setting alone to prevent it.
+    Only checks for CJK scripts specifically -- legitimate te reo Maori
+    macrons (a, o, etc.) are ordinary Latin-extended characters and are not
+    flagged by this check.
+    """
+    return bool(_CJK_PATTERN.search(value))
+
+
 def get_client() -> OpenAI:
     """Create the Nebius Token Factory client. Raises if NEBIUS_API_KEY is unset."""
     api_key = os.environ.get("NEBIUS_API_KEY")
@@ -326,6 +364,17 @@ def extract_policy(
             )
             continue
 
+        if _contains_unexpected_script(
+            f"{parsed.get('policy_name', '')} {parsed.get('stated_position', '')}"
+        ):
+            logger.warning(
+                "%s (attempt %d/%d) contains unexpected non-English script "
+                "characters -- retrying: %r / %r",
+                party, attempt, max_retries,
+                parsed.get("policy_name"), parsed.get("stated_position"),
+            )
+            continue
+
         # source_url is known by the caller. amount, percentage_target, and
         # start_date are all validated against the actual source text before
         # being trusted -- see the validation helpers' docstrings.
@@ -350,8 +399,9 @@ def extract_policy(
         return parsed
 
     logger.error(
-        "Extraction failed for %s after %d attempts -- every attempt either "
-        "returned unparseable JSON or a content-free placeholder summary.",
+        "Extraction failed for %s after %d attempts -- every attempt "
+        "returned unparseable JSON, a content-free placeholder summary, or "
+        "unexpected non-English script characters.",
         party, max_retries,
     )
     return None

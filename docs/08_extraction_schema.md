@@ -380,3 +380,90 @@ fabricated one is much harder to catch after the fact.
     just not attached to the thing being claimed about it (a percentage). The
     fix was checking the literal combined pattern (`<number>%`, `$<number>`),
     not the number in isolation.
+
+---
+
+## Round 7 (17 Sep 2026): content-free summaries and garbled script injection
+
+Extending the corpus with Te Pāti Māori's Income policy (correcting an
+earlier mis-transcription — see `04_source_profiles.md`) surfaced two more
+distinct failure modes.
+
+### Finding: schema field descriptions are weaker than main prompt instructions
+
+`stated_position` twice returned a content-free structural placeholder for
+the same list-style source — first "will implement the following measures,"
+then (after tightening the schema's field *description*) "will:" — a
+different placeholder, same underlying problem. **Tightening a schema
+field's description alone did not fix this.** The real fix needed the
+instruction moved into the main prompt text itself, with a concrete
+good/bad example, plus a dedicated validation check (`_is_placeholder_position`)
+that treats a content-free summary as a retry-triggering failure, the same
+as a JSON parse error.
+
+### Finding: retrying an identical request at temperature=0 can reproduce an identical wrong answer
+
+Te Pāti Māori's Te Tiriti Entrenchment policy returned the exact string
+"Launched today" on three consecutive retries — proving retries are only
+useful against random failures, not deterministic ones. **Fix, first
+attempt:** nudge temperature up on retries. This worked for unblocking the
+stuck output, but introduced a new, worse problem (below). **Fix, final:**
+instead of touching temperature, feed the model's own previous bad output
+back into the next attempt's prompt as an explicit correction ("you said X,
+which is inadequate, don't repeat it"). This gives real signal to diverge
+without touching temperature at all.
+
+### Finding: raising temperature caused garbled non-English characters to leak into English text
+
+The temperature-nudge fix above caused CJK characters to appear mid-word in
+otherwise-English output (`"without任何"`, `"double基"`, `"from業"`) —
+confirmed, not assumed, via a direct isolation test: forcing temperature=0 on
+every attempt made the garbling disappear across a full corpus run.
+Nemotron-3's documented multilingual support appears to surface at higher
+temperatures. This is why the fix above settled on prompt-based correction
+rather than a temperature nudge.
+
+### Finding: temperature=0 reduces but does not fully eliminate the garbling
+
+After reverting to temperature=0 on every attempt, a **second run** still
+produced one instance of the same CJK leakage (`"through the既有"`) — on a
+retry after a JSON parse failure, at temperature=0. This means the earlier
+isolation test's conclusion was too strong: temperature=0 is much safer, not
+fully safe. **Fix:** added a direct content check (`_contains_unexpected_script`)
+scanning `policy_name` and `stated_position` for CJK Unicode ranges, treated
+as a retry-triggering failure like everything else — checking the actual
+output rather than trusting a generation setting to prevent a problem by
+itself. This deliberately checks only CJK scripts, not all non-ASCII
+characters, since legitimate te reo Māori macrons (ā, ō, etc.) are ordinary
+Latin-extended characters that must not be flagged.
+
+### Result
+
+After all three fixes: all 7 policies extracted cleanly, Te Pāti Māori's
+previously-stuck policy now has a real substantive summary, and the "cost of
+living" query in Topic-Match correctly matched both genuinely relevant
+policies (Te Pāti Māori's Incomes Policy, Greens' Children's Policy) for the
+right reason — real content, not a suggestively-named policy title carrying
+the match on its own.
+
+## Standing lessons, updated after Round 7
+
+13. **A schema field's `description` carries less instructional weight than
+    the main prompt text.** When a description-only fix fails twice on the
+    same failure pattern, move the instruction (with a concrete example) into
+    the prompt itself rather than continuing to tighten the description.
+14. **Retrying an identical request at temperature=0 will reproduce an
+    identical wrong answer if the failure is deterministic, not random.**
+    A useful retry needs to change something about the request itself (e.g.
+    feeding back the specific prior failure as a correction), not just repeat
+    it and hope.
+15. **Never fix a reliability problem by changing a generation parameter
+    without directly testing whether the fix introduces a new problem.** The
+    temperature nudge silently traded one failure mode (a stuck placeholder)
+    for a worse one (fabricated foreign-language content) — caught only
+    because the actual output was checked, not because the fix was assumed
+    safe.
+16. **A generation-parameter fix (like temperature=0) can reduce a failure's
+    frequency without eliminating it.** Don't stop at "the problem didn't
+    reappear once" — a direct content check catches what a safer setting
+    only makes rarer.
