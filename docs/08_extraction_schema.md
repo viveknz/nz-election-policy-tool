@@ -201,3 +201,84 @@ schema change.
 7. **Occasional call-level failures (JSON truncation) are a pipeline concern,
    not a schema concern.** The fix is retry logic around the call, not an
    ever-increasing `max_tokens` value chasing a moving target.
+
+---
+
+## Round 5 (17 Sep 2026): fabricated dates, and the first real multi-party corpus
+
+Extending the corpus to National (two real texts: an explicitly uncosted
+policy, and a genuinely costed-in-reality policy whose dollar figure doesn't
+actually appear in the fetched HTML — see `04_source_profiles.md` for the PDF
+question this raises) surfaced a new, serious instance of fabrication.
+
+### Finding: the model invented a fully fictional ISO date, twice, with two different fake values
+
+For National's "Flexible Use of Paid Parental Leave" — a real page whose actual
+text contains **no dates or numbers of any kind** ("This is a simple,
+pragmatic change that will come at no extra cost to the taxpayer") — the model
+returned `start_date: "2023-06-14T00:00:00+00:00"` on one run and
+`"2025-01-01T00:00:00Z"` on a re-run of the identical input. Neither date
+appears anywhere in the source. This is confabulation, the same category as
+the earlier "Stage Graduation Account" incident in Round 3, but this time
+producing a precise, plausible-looking, fully structured timestamp instead of
+prose — arguably more dangerous, since a clean ISO date is far more likely to
+be trusted downstream without a human noticing anything is wrong.
+
+**This also confirms a separate, important fact: `temperature=0` does not
+guarantee identical output across calls on this backend.** The same exact
+input produced two different fabricated dates on two different runs. This
+doesn't contradict Round 4's finding that "temperature=0 gives repeatability,
+not correctness" — it sharpens it. Repeatability itself isn't fully
+guaranteed either, at least not on this hosted serving stack (likely due to
+batching or kernel-level non-determinism common to many hosted LLM backends,
+not a project-specific bug).
+
+### Fix: validate extracted values against the source text, don't just trust the model's own claim
+
+Added `_validate_against_source()` to `extraction/extract.py`: after
+extraction, any 4-digit year appearing in `amount` or `start_date` is checked
+against the actual source text. If the year doesn't appear anywhere in the
+real text, the field is discarded (set to empty string) rather than trusted.
+
+**First attempt was too strict and produced a false positive.** An initial
+version checked every digit sequence (not just years), which correctly
+rejected the fabricated `2023` date but also rejected a **genuinely correct**
+date (`2027-07-01`) for National's other policy, because the source spells the
+month out as "1 July 2027" — the digits "07" and "01" never literally appear
+in a source that writes "July," even though the underlying date is right.
+**Fix, narrowed:** check only 4-digit year tokens, not day/month numbers. Every
+fabrication actually observed so far has been a wrong year; day/month
+reformatting is a legitimate, correct transformation that a naive digit check
+punishes for no real safety gain.
+
+### Result: the fix worked against two different fabricated values, not just the one it was built to catch
+
+Confirms this is a real, generalizable validation, not a patch tuned to one
+specific wrong answer: the second test run produced a *different* fabricated
+date than the first, and the same check caught it without any change.
+
+### First real, validated multi-party corpus
+
+`data/policies.json` now contains four genuinely extracted, validated policies
+across three parties (Labour, Te Pāti Māori, National x2), including two
+distinct legitimate reasons for `is_costed: false` (an explicit "no cost"
+policy, and a real policy whose costing exists only in a linked PDF, not the
+crawled HTML) — this is the first real dataset this project has, replacing
+every invented placeholder example used earlier in `01_framing.md`.
+
+## Standing lessons, updated after Round 5
+
+8. **Never trust a model's own claim about a fact when the source text is
+   available to check it against.** Post-extraction validation against the
+   actual source — not just tighter prompts or schema constraints — is what
+   caught two separate, differently-worded fabricated dates that better
+   instructions alone did not prevent.
+9. **A validation check should target the general failure pattern, not the
+   specific wrong value observed.** Checking "does this exact string appear"
+   would have been too narrow to generalize; checking "does this specific
+   *kind* of claim (a year) appear anywhere in context" caught a second,
+   different fabrication for free.
+10. **`temperature=0` does not guarantee identical output run-to-run** on this
+    hosted backend. Design pipelines assuming genuine non-determinism is
+    possible even at the most conservative setting, rather than treating a
+    single successful run as proof of stability.
