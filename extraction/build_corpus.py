@@ -14,6 +14,7 @@ Usage:
 import json
 import logging
 import os
+import re
 
 from extraction.extract import get_client, extract_policy
 
@@ -224,6 +225,14 @@ from tobacco industry interference. By 2025, we ranked 53rd.
 ]
 
 
+def _slugify(text: str) -> str:
+    """Lowercase, alphanumeric-and-dashes only, collapsed. Used to build a
+    stable id from party + policy_name -- computed here, never asked of the
+    model, same principle as every other derived field."""
+    slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return slug
+
+
 def main():
     client = get_client()
     corpus = []
@@ -239,6 +248,11 @@ def main():
         if result is None:
             logger.error("Extraction failed for %s - %s, skipping.", entry["party"], entry["source_url"])
             continue
+        # Stable id, computed here rather than asked of the model -- used by
+        # Topic-Match to reference a policy without ever needing to echo
+        # back or reconstruct its content.
+        result["id"] = _slugify(f"{entry['party']}-{result['policy_name']}")
+
         corpus.append(result)
         logger.info("  -> %s", result)
 
