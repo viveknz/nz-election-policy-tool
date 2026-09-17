@@ -16,10 +16,11 @@ Design decisions baked in here, all documented in docs/08_extraction_schema.md:
   distinct because Treasury/RBNZ baselines use both formats, and merging them
   into one field would lose which kind of figure is actually being compared
   later.
-- temperature=0 on the first attempt only (best default for a factual task);
-  retries nudge temperature up slightly, since identical retries at
-  temperature=0 can reproduce the exact same wrong output (observed directly:
-  three straight retries all returning the placeholder "Launched today").
+- temperature=0 on every attempt, always. Raising temperature on retries was
+  tried and directly confirmed (via an isolation test) to cause garbled
+  non-English characters to leak into English output -- reverted. Retries
+  instead feed the model's own previous bad output back as a specific
+  correction, giving it real signal to diverge without touching temperature.
 - Every free-text field is length-constrained; amount also has a regex
   pattern. Unconstrained fields produced repetition loops and hallucination in
   testing.
@@ -248,7 +249,7 @@ def extract_policy(
     attached programmatically -- not asked of the model), or None if
     extraction failed after all retries.
     """
-    prompt = (
+    base_prompt = (
         f"Extract the policy details from this real {party} policy page text.\n\n"
         "For stated_position specifically: summarize the actual substance of "
         "what the party will do, never a content-free description of the "
@@ -261,19 +262,24 @@ def extract_policy(
         f"Policy text:\n{policy_text}"
     )
 
+    last_bad_position = None
+
     for attempt in range(1, max_retries + 1):
-        # Nudge temperature up on retries only. Round 5/6 found this model can
-        # return the IDENTICAL output on repeated identical calls at
-        # temperature=0 -- observed here as three straight retries all
-        # producing "Launched today". Retrying the identical request at
-        # temperature=0 can never escape a deterministic bad output; a small
-        # nudge gives later attempts an actual chance to differ. The first
-        # attempt stays at 0 for the consistency benefits documented earlier.
-        # DIAGNOSTIC: temperature nudge temporarily disabled (forced to 0 on
-        # every attempt) to isolate whether it's the cause of garbled
-        # non-English characters observed in the last run. Revert this once
-        # the cause is confirmed either way.
-        attempt_temperature = 0
+        prompt = base_prompt
+        if last_bad_position:
+            # Confirmed by direct test that raising temperature on retry
+            # caused garbled non-English characters to leak into output
+            # (Nemotron-3's documented multilingual support appears to
+            # surface at higher temperatures). Reverted to temperature=0 on
+            # every attempt. Instead, feed the actual bad output back as a
+            # specific correction -- real signal to diverge, without
+            # touching temperature at all.
+            prompt += (
+                f"\n\nNote: you previously returned stated_position as "
+                f"{last_bad_position!r}, which is a content-free placeholder "
+                "that doesn't say what the policy does. Do not repeat this -- "
+                "describe the actual substance of the policy instead."
+            )
 
         try:
             response = client.chat.completions.create(
@@ -288,7 +294,7 @@ def extract_policy(
                     },
                 },
                 max_tokens=MAX_TOKENS,
-                temperature=attempt_temperature,
+                temperature=0,
             )
         except (BadRequestError, APIConnectionError, APIError) as e:
             # An API-level error is not something a retry on the same input
@@ -312,10 +318,11 @@ def extract_policy(
             continue
 
         if _is_placeholder_position(parsed.get("stated_position", "")):
+            last_bad_position = parsed.get("stated_position")
             logger.warning(
                 "stated_position for %s (attempt %d/%d) is a content-free "
                 "placeholder, not a real summary -- retrying: %r",
-                party, attempt, max_retries, parsed.get("stated_position"),
+                party, attempt, max_retries, last_bad_position,
             )
             continue
 
