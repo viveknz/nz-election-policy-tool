@@ -137,6 +137,90 @@ contributing. The contribution will be made at the default rate, applied to
 the paid parental leave a person receives, from 1 July 2027.
 """,
     },
+    {
+        "party": "Greens",
+        "source_url": "https://www.greens.org.nz/children_policy",
+        # Real per-page URL slug confirmed here for the first time -- it's a
+        # short slug ("children_policy"), not the "manifesto_2026_<topic>"
+        # pattern assumed (without verification) in the earlier listing-page
+        # profile. Content confirms the earlier finding: no "childcare"
+        # mention, but genuinely references extending parental leave as part
+        # of a broader anti-child-poverty policy bundle. No costing anywhere
+        # on this page.
+        "text": """
+Children's Policy
+
+Summary:
+The Green Party will reform social support services to enable equitable access
+for all whanau, extend paid parental leave, reform Working for Families and
+lift minimum wage entitlements to eliminate child poverty in Aotearoa. We will
+promote greater collaboration across Government for the benefit of children
+and support effective solutions to keep children from harm.
+
+Our vision: All children experience a joyful childhood and the best possible
+start to life.
+
+Strategic Priorities:
+- Support the co-design with tangata whenua of an evidence-based nationwide
+  child wellbeing strategy that cements children's rights, including the
+  rights of tamariki and rangatahi Maori under Te Tiriti o Waitangi.
+- Ensure that legislation, policy, and practice meet Aotearoa New Zealand's
+  human rights obligations under the UN Convention on the Rights of the Child
+  (UNCROC) and that the recommendations of the UN Committee on the Rights of
+  the Child (CRC) are fully implemented.
+- Improve and ensure equitable access to social services for children with
+  additional needs and their whanau, focused on both early identification and
+  ongoing support, including adequate resourcing of and access to respite
+  services for parents.
+- Review and reform the Child Support system to ensure it operates in a way
+  that best benefits children and young people.
+""",
+    },
+    {
+        "party": "Opportunity",
+        "source_url": "https://www.opportunity.org.nz/healthy_people",
+        # Real, rich content -- three pillars, FAQ section -- contradicting
+        # the earlier finding that Opportunity's pages have "zero descriptive
+        # text" (that finding was specifically true of the /policy listing
+        # page; individual policy pages are actually detailed). Also a real
+        # schema edge case: the fiscal target is stated as a percentage of
+        # GDP ("9% of GDP"), not a dollar figure -- our amount field only
+        # captures $ amounts, so this correctly returns is_costed: false even
+        # though a real, checkable fiscal claim exists here. Flagged as an
+        # open schema gap, not silently missed.
+        "text": """
+Healthy People
+
+Health is too important to be a political football. It's time for a 10-year
+plan.
+
+Opportunity will establish, and protect, a 10-year plan that properly funds
+our health workers and focuses on preventing illness in the first place.
+
+To back our healthcare workers, our Healthy People policy will deliver three
+pillars: a cross-party, 10-year Health Plan that lifts funding to 9% of GDP; a
+renewed focus on primary, community and preventative care; and tougher
+lobbying and political donation rules for industries that profit from
+illness.
+
+Pillar 1: Plan and fund health for the next 10 years
+Opportunity will work across the aisle to establish a 10-year Health Plan.
+This published, costed plan will detail the goals, milestones and investments
+Kiwis expect, and our health workers deserve. In that plan, we will advocate
+to increase and maintain health funding from the current 7.4% of GDP to 9% of
+GDP, and increase the share of funding for primary care providers like GP
+clinics.
+
+Pillar 2: Prevent Kiwis from getting sick in the first place
+Tobacco, alcohol and unhealthy food account for a quarter of all the healthy
+years New Zealanders lose to death and disability. We'll restore the school
+lunch programme and a credible pathway towards a smokefree New Zealand.
+
+Pillar 3: Protect health regulations from vested interests
+In 2023, New Zealand ranked second in the world for protecting health policy
+from tobacco industry interference. By 2025, we ranked 53rd.
+""",
+    },
 ]
 
 

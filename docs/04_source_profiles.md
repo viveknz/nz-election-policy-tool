@@ -204,11 +204,21 @@ this source specifically (vs. a plain static fetch that works for the others)?
 2. **A stale URL from a previous election cycle is still live and serving current
    content.** The "Climate Action: Emissions Reduction" card links to
    `/manifesto_2020_climate_action_emissions_reduction` — note "2020" in the slug —
-   while every other topic uses a `manifesto_2026_` prefix. The content itself is
+   while another topic uses a `manifesto_2026_` prefix. The content itself is
    current 2026 policy; only the URL fragment is stale. **Lesson for extraction: a
    URL slug's year cannot be trusted as evidence of which election cycle the
    content actually belongs to** — always check the page's own dated content, not
    the URL string.
+
+   **Correction (17 Sep 2026):** the claim above that "every other topic uses a
+   `manifesto_2026_` prefix" was an assumption made from the grid page's link
+   list, never verified against an actual fetched page. Fetching the Children's
+   Policy page directly shows its real URL is `greens.org.nz/children_policy` —
+   a short slug, not `manifesto_2026_children`. So the URL naming convention is
+   not consistent across topics at all: some pages use the `manifesto_2026_`
+   prefix, at least one uses a bare short slug. This reinforces the same lesson
+   already learned from Labour and Te Pāti Māori: **never guess a party's
+   per-page URL pattern — always follow the actual href from the listing page.**
 
 3. **Every topic blurb is truncated with "..."** in the grid view — the full text
    of each policy lives only on its own dedicated page, not in the listing. This is
