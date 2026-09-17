@@ -17,6 +17,11 @@ Design decisions baked in here, all documented in docs/08_extraction_schema.md:
   testing.
 - Retries on JSON parse failure (typically caused by truncation), not on
   every kind of failure -- an API error is not something a retry fixes.
+- amount and start_date are validated against the source text after
+  extraction: any numeric content (a year, a dollar figure) that doesn't
+  actually appear in the source is discarded rather than trusted. This exists
+  because the model has been observed to fabricate plausible-looking values
+  (a fully invented ISO date, for one) with no basis in the real text.
 
 Usage as a module:
     from extraction.extract import extract_policy, get_client
@@ -33,6 +38,7 @@ Usage as a module:
 """
 
 import os
+import re
 import json
 import logging
 
@@ -95,6 +101,40 @@ def get_client() -> OpenAI:
     return OpenAI(base_url=BASE_URL, api_key=api_key)
 
 
+def _numeric_tokens(text: str) -> set[str]:
+    """All digit sequences in a string, e.g. '2027' or '525' or '01'."""
+    return set(re.findall(r"\d+", text or ""))
+
+
+def _validate_against_source(value: str, source_text: str, field_name: str, party: str) -> str:
+    """
+    Discard a value if it contains numbers that don't appear anywhere in the
+    source text -- a direct fabrication check, added after finding the model
+    invent a fully fictional ISO date ('2023-06-14T00:00:00+00:00') for a
+    policy whose real text contains no dates at all (docs/08_extraction_schema.md,
+    Round 5). A value with no numbers (e.g. 'immediately', 'today') is not
+    checked here -- this specifically targets fabricated dates/amounts, the
+    demonstrated failure mode, not every possible wording choice.
+    """
+    if not value:
+        return value
+
+    value_tokens = _numeric_tokens(value)
+    if not value_tokens:
+        return value
+
+    source_tokens = _numeric_tokens(source_text)
+    if not value_tokens.issubset(source_tokens):
+        logger.warning(
+            "Discarding %s for %s -- contains numbers not found in the source "
+            "text (likely fabricated): %r",
+            field_name, party, value,
+        )
+        return ""
+
+    return value
+
+
 def extract_policy(
     client: OpenAI,
     party: str,
@@ -151,8 +191,17 @@ def extract_policy(
             )
             continue
 
-        # source_url is known by the caller; is_costed is derived from
-        # amount. Neither is asked of the model -- see module docstring.
+        # source_url is known by the caller. amount and start_date are
+        # validated against the actual source text before being trusted --
+        # see _validate_against_source's docstring for why this exists.
+        # is_costed is derived from amount only after that validation, so a
+        # discarded fabricated amount correctly flips is_costed to False.
+        parsed["amount"] = _validate_against_source(
+            parsed.get("amount", ""), policy_text, "amount", party
+        )
+        parsed["start_date"] = _validate_against_source(
+            parsed.get("start_date", ""), policy_text, "start_date", party
+        )
         parsed["source_url"] = source_url
         parsed["is_costed"] = bool(parsed.get("amount"))
 
