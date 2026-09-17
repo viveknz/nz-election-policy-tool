@@ -499,3 +499,40 @@ the block. NZ First stays on manual capture or is skipped, exactly as
 originally decided — using a differently-named user agent to bypass a rule
 clearly aimed at this kind of use would sit against the project's own
 transparency standard.
+
+---
+
+## Round 9 (17 Sep 2026): first fully-automated corpus run, and the CJK check proves itself live
+
+Running `build_corpus.py` fully wired to the real Fetch module for the first
+time (no manually-curated text anywhere in the loop) produced 6 of 7
+policies successfully, fully automated, end to end.
+
+### Finding: browser-like headers weren't enough to fix National's 404
+
+Adding `Accept`/`Accept-Language` headers (Round 8) did not fix National's
+Flexible Parental Leave page returning a 404 to our Fetch module, despite
+being confirmed live via a real fetch. This points to protection deeper than
+header-level checking — likely TLS fingerprinting or full request-signature
+profiling, which a plain `requests`-based client cannot resolve without a
+real browser engine. **Decision:** stop iterating on this with header
+guesses; backlog it as needing a heavier fetch mechanism (Playwright/Selenium
+or a TLS-spoofing client) rather than keep patching blindly.
+
+### The CJK-injection check proved itself in a real, unscripted run
+
+Not a controlled test this time — a normal corpus build run. Two different
+policies (Te Pāti Māori's Te Tiriti Entrenchment, National's Paid Parental
+Leave extension) both had Chinese characters injected into otherwise-English
+text on their first extraction attempt (`独立资源`, `规`, `旧`), and both
+were automatically caught and retried until clean, with no manual
+intervention. This is the Round 7 fix working exactly as designed under real
+conditions, not just in the isolation test that originally validated it.
+
+### Minor, lower-priority cosmetic note
+
+Opportunity's `stated_position` ended with `"v‑v"` — an odd truncation
+artifact at the field's `maxLength` boundary, not a CJK match (didn't trigger
+the script check) and not a fabrication (no invented content). Noted, not
+fixed — cosmetic, cut off mid-word the same way several earlier `start_date`
+values were.

@@ -59,3 +59,15 @@ Not a wishlist; only things with a concrete reason they're waiting.
   Decision: do not use this to route around the block. NZ First stays on
   manual capture (or is skipped) as originally decided — not fetched by the
   automated pipeline under a differently-named user agent.
+
+- **National's Flexible Parental Leave page (`/policies/flexible-use-of-paid-parental-leave`)
+  cannot be auto-fetched** (raised 17 Sep 2026, `08_extraction_schema.md`
+  Round 9). Returns a 404 to our Fetch module even with realistic browser
+  headers added, despite being confirmed live and fetchable via a real
+  browser-equivalent request. Very likely deeper bot detection (TLS
+  fingerprinting or full request-signature profiling) that a plain
+  `requests`-based fetch cannot get around — would need a real browser
+  engine (Playwright/Selenium) or a TLS-spoofing HTTP client, a real scope
+  increase, not a quick header fix. **Not yet resolved.** Currently excluded
+  from the automated corpus; the real text was captured manually earlier in
+  this project if needed as a stopgap.

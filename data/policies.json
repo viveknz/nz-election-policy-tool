@@ -2,10 +2,10 @@
   {
     "policy_name": "Graduate Nurse Job Guarantee",
     "party": "Labour",
-    "stated_position": "Labour will guarantee a job for every eligible New Zealand‑trained graduate nurse, offering positions at graduation from 2027 (for those sitting the State Final exam from July 2026) with at least 0.8 ",
+    "stated_position": "Labour will guarantee a job for every eligible New Zealand‑trained graduate nurse, offering positions at the point of graduation from 2027 onward, with roles of at least 0.8 full‑time equivalent in hô",
     "amount": "$525 million",
     "percentage_target": "",
-    "start_date": "2027-01-01T00:00:00Z",
+    "start_date": "2027 (roles offered on graduation, for graduates sitting the",
     "source_url": "https://www.labour.org.nz/election-policy-pages/graduate-nurse-job-guarantee/",
     "is_costed": true,
     "id": "labour-graduate-nurse-job-guarantee"
@@ -13,7 +13,7 @@
   {
     "policy_name": "Te Tiriti Entrenchment Policy",
     "party": "Te Pāti Māori",
-    "stated_position": "Make Crown obligations arising from Te Tiriti legally enforceable, establish a $220 million Mātike Mai Fund to resource Māori‑led constitutional transformation, create an independent Te Tiriti Commis­",
+    "stated_position": "Make Crown obligations arising from Te Tiriti legally enforceable and resource the next stage of Māori‑led constitutional transformation by: establishing a $220 million Mātike Mai Fund over four years",
     "amount": "$220 million",
     "percentage_target": "",
     "start_date": "2026-09-01T00:00:00Z",
@@ -24,7 +24,7 @@
   {
     "policy_name": "Income Policy",
     "party": "Te Pāti Māori",
-    "stated_position": "The Māori Party will overhaul the income support system to ensure dignified, adequate incomes for all whānau by: (1) immediately raising the minimum wage to $25 per hour and guaranteeing annual cost‑l",
+    "stated_position": "The Māori Party will raise the minimum wage to $25 per hour and ensure annual increases keep pace with cost‑of‑living, guarantee pay equity for Māori nurses and teachers, double baseline benefit rates",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -33,20 +33,20 @@
     "id": "te-pati-maori-income-policy"
   },
   {
-    "policy_name": "National Party's Paid Parental Leave Modernisation",
-    "party": "National",
-    "stated_position": "National will gradually extend paid parental leave from 26 to 30 weeks by 2029, starting with a 27‑week entitlement in the next Budget and further increases in subsequent Budgets. The policy also rew",
+    "policy_name": "Paid Parental Leave Extension and Modernisation",
+    "party": "National Party",
+    "stated_position": "National will gradually extend paid parental leave from the current 26 weeks to 30 weeks by 2029 – beginning with a 27‑week entitlement in the next Budget and further increases in subsequent Budgets –",
     "amount": "",
     "percentage_target": "",
-    "start_date": "2026-07-01",
+    "start_date": "2026 (next Budget) and phased increases through 2029, with a",
     "source_url": "https://www.national.org.nz/news/paid-parental-leave",
     "is_costed": false,
-    "id": "national-national-party-s-paid-parental-leave-modernisation"
+    "id": "national-paid-parental-leave-extension-and-modernisation"
   },
   {
     "policy_name": "Children's Policy",
     "party": "Green Party of Aotearoa New Zealand",
-    "stated_position": "The Green Party will reform social support services to ensure equitable access for all whānau, extend paid parental leave, overhaul the Working for Families scheme and raise the minimum wage to erad‑​",
+    "stated_position": "The Green Party will reform social support services to ensure equitable access for all whānau, extend paid parental leave, overhaul the Working for Families scheme, and raise minimum wage levels to Er",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
@@ -57,7 +57,7 @@
   {
     "policy_name": "Healthy People",
     "party": "The Opportunity Party",
-    "stated_position": "The party will implement a comprehensive, cross‑party 10‑year health plan that raises public health spending from 7.4% to 9% of GDP, guarantees stable funding for primary and preventative care, and en",
+    "stated_position": "The party commits to a comprehensive, cross‑party 10‑year health strategy that raises public health spending to 9% of GDP, prioritises primary and preventative care, and shields health policy from v‑v",
     "amount": "",
     "percentage_target": "",
     "start_date": "",
