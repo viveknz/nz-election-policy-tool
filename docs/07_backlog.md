@@ -50,3 +50,12 @@ Not a wishlist; only things with a concrete reason they're waiting.
   summing to $202.6m, vs. a separately-reported $327m four-year headline
   total). **Not yet resolved** — needs either a different fetch mechanism or
   a manual download, the same pattern as the NZ First backlog item above.
+
+- **NZ First robots.txt ambiguity, decided 17 Sep 2026** (see
+  `08_extraction_schema.md` Round 8). Our own Fetch module's generic user
+  agent was not blocked by NZ First's robots.txt, even though Anthropic's own
+  fetch tool was explicitly disallowed on the same URL — likely because the
+  site's rule targets named AI crawlers specifically, not bots in general.
+  Decision: do not use this to route around the block. NZ First stays on
+  manual capture (or is skipped) as originally decided — not fetched by the
+  automated pipeline under a differently-named user agent.

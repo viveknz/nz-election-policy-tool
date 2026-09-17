@@ -467,3 +467,35 @@ the match on its own.
     frequency without eliminating it.** Don't stop at "the problem didn't
     reappear once" — a direct content check catches what a safer setting
     only makes rarer.
+
+---
+
+## Round 8 (17 Sep 2026): building the real Fetch module
+
+Every corpus entry until now was manually curated by Claude (real text
+fetched via Anthropic's own tools, then hand-copied into `build_corpus.py`).
+A real pipeline needs this automated — `fetch/fetch.py` was built to do it.
+
+### Finding: Python's RobotFileParser.read() can give a false "disallow"
+
+First version correctly fetched real pages but wrongly reported Labour's
+robots.txt as disallowing everything. Root cause: `RobotFileParser.read()`
+fetches robots.txt internally via `urllib.request`, using Python's generic
+default user agent — a string commonly blocked or challenged by WAFs/CDNs,
+independent of whether the site actually disallows crawling. **Fix:** fetch
+robots.txt manually with the same working `requests` session and custom user
+agent already used for the real page, then hand its text to
+`RobotFileParser.parse()` instead of letting it do its own internal fetch.
+
+### Finding: NZ First's robots.txt likely targets named AI crawlers specifically, not bots in general
+
+After the fix above, our Fetch module's generic user agent was **not**
+blocked by NZ First's robots.txt — despite Anthropic's own fetch tool being
+explicitly disallowed on the identical URL earlier in this project. Most
+likely explanation: the site's rule names specific AI crawlers rather than
+blocking broadly, and our unbranded script simply isn't recognized by that
+rule. **Decision (not a code fix):** do not use this as a way to route around
+the block. NZ First stays on manual capture or is skipped, exactly as
+originally decided — using a differently-named user agent to bypass a rule
+clearly aimed at this kind of use would sit against the project's own
+transparency standard.
