@@ -71,7 +71,7 @@ SCHEMA = {
         "stated_position": {
             "type": "string",
             "maxLength": 200,
-            "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms. Do not include costing, dates, or eligibility detail here -- those go in their own fields.",
+            "description": "One to two sentence plain summary of what the party says it will do, in the party's own terms. Do not include costing, dates, or eligibility detail here -- those go in their own fields. CRITICAL: if the source text is a list of measures/actions, summarize what the list actually contains (e.g. 'raise the minimum wage and double benefit levels'), never a content-free placeholder like 'will implement the following measures' or 'has announced a policy' -- that describes the text's structure, not its substance, and is not acceptable.",
         },
         "amount": {
             "type": "string",
